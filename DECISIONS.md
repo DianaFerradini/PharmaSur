@@ -33,6 +33,8 @@ _Dernière mise à jour : 16 novembre 2026_
 
 Ne sont pas dans la démo : l'inscription d'une pharmacie (le catalogue est simulé) et la recherche hors zone. La page web est prévue le 17/11 s'il reste du temps.
 
+Ordre de construction : 1, 6, 2 et 7 pour le quart de finale, puis 3 s'il reste du temps (D33).
+
 ## Stock et pharmacies
 
 ### D1 — Le bot consulte une base de stock
@@ -268,6 +270,18 @@ Ne sont pas dans la démo : l'inscription d'une pharmacie (le catalogue est simu
 - **Pour garder la bascule possible** : la transcription est isolée dans une seule fonction. Si le premier vocal de test donne un texte inutilisable, on essaie Google.
 - **Écarté** : Google pour la démo (mise en place plus longue) et un test des deux avant de choisir (environ une heure de plus).
 - **Compte à créer par l'équipe** : ElevenLabs.
+
+### D33 — Le quart de finale montre le texte, la photo, la demande d'équivalent et le vocal
+
+- **Décision** : les parcours 1, 6, 2 et 7 doivent être prêts pour le quart de finale du 18/11 au matin. Ils sont construits dans cet ordre : recherche par texte, photo d'ordonnance, demande d'équivalent, vocal en wolof.
+- **Ensuite, s'il reste du temps** : le parcours 3 (rupture, retour en stock, résumé), puis la page web (D26).
+- **Pré-pitch du 17/11 à 16 h** : on montre ce qui fonctionne à ce moment-là, sans liste imposée.
+- **Pourquoi cet ordre** : le parcours 1 est la base des autres. La photo et le vocal finissent en recherche, et l'introuvable part d'une recherche. Le vocal passe en dernier parce qu'il dépend des 12 enregistrements de l'équipe (D24).
+- **Conséquences** :
+  - Le parcours 2 ne dépend pas du parcours 3, puisque le Smecta n'est dans aucun catalogue simulé.
+  - Le téléphone de Baobab sert quand même, pour toucher « Oui » dans la demande d'équivalent.
+  - Sans le parcours 3, l'enchaînement du jury va de la photo de l'ordonnance au vocal (voir [PARCOURS.md](PARCOURS.md)).
+- **Écarté** : viser tout l'enchaînement pour le pré-pitch, un cœur sans photo ni vocal, et faire passer le côté pharmacie (parcours 3) avant la photo et le vocal.
 
 ## Options en suspens
 

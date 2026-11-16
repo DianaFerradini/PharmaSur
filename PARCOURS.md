@@ -352,3 +352,5 @@ Une proposition, à répéter avant le passage :
 4. 👤 **Recherche par vocal en wolof** : le bot répond par un vocal, accompagné de la fiche écrite (parcours 7).
 5. 💊 **Baobab écrit « résumé »**. Phrase de pitch : « On ne vous vend pas de la visibilité, on vous montre les clients que vous ratez. » (D14)
 6. Si elle est prête : **la page de présentation avec son QR code**, puis le tableau de bord (D26).
+
+Si le parcours 3 n'est pas prêt (D33), on saute les étapes 1 et 5 : l'enchaînement va de la photo de l'ordonnance au vocal en wolof.
