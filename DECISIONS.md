@@ -1,7 +1,7 @@
 # Décisions — PharmaSûr
 
 Journal des décisions prises pendant la conception des parcours utilisateurs. Mis à jour après chaque décision.
-Vocabulaire : voir [GLOSSARY.md](GLOSSARY.md).
+Vocabulaire : voir [GLOSSARY.md](GLOSSARY.md). Parcours étape par étape : voir [PARCOURS.md](PARCOURS.md). Décisions structurantes : voir [docs/adr/](docs/adr/).
 
 _Dernière mise à jour : 16 novembre 2026_
 
@@ -265,7 +265,7 @@ Aucune pour les parcours. Ces points restent à régler pendant l'implémentatio
 - **Sections 2.5, 4.4, 8.4 et 9** : l'ordonnance est acceptée pour lire les noms des médicaments (D12).
 - **Modèle économique** : ajouter le résumé comme argument de vente auprès des pharmacies (D14).
 
-## ADR à rédiger en fin de session
+## ADR
 
-- La base de stock à la place d'une confirmation par la pharmacie à chaque recherche (D1).
-- L'acceptation de l'ordonnance (D12).
+- [0001 — Une base de stock plutôt qu'une confirmation par la pharmacie à chaque recherche](docs/adr/0001-base-de-stock-plutot-que-confirmation.md) (D1)
+- [0002 — PharmaSûr lit les noms sur l'ordonnance, sans la garder ni la transmettre](docs/adr/0002-lecture-des-ordonnances.md) (D12)
