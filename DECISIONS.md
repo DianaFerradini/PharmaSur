@@ -101,6 +101,11 @@ Ne sont pas dans la démo : l'inscription d'une pharmacie (le catalogue est simu
 - **Décision** : quand une pharmacie a une solution, le bot transmet seulement le nom de la pharmacie : « La pharmacie X a peut-être une solution pour [médicament] : allez demander conseil au pharmacien. » Il ne donne jamais le nom du produit.
 - **Pourquoi** : c'est plus sûr, et ça s'éloigne de l'exercice de la pharmacie, que PharmaSûr ne pratique pas.
 
+### D16 — La pharmacie répond d'un geste, son silence vaut non
+
+- **Décision** : la demande d'équivalent arrive avec des boutons de réponse (par exemple « Oui, j'ai une solution » et « Non »). Le pharmacien touche un bouton ; tant qu'il ne touche rien, sa réponse compte comme un non.
+- **Pourquoi** : un seul geste quand il a une solution, et aucune action exigée sinon. Ça respecte le principe de ne pas charger les pharmaciens.
+
 ## Photo (parcours 6)
 
 ### D12 — La photo d'ordonnance est acceptée
@@ -140,11 +145,11 @@ Ne sont pas dans la démo : l'inscription d'une pharmacie (le catalogue est simu
 ## Éléments techniques
 
 - **Vocal wolof** : la transcription est possible avec Google Cloud Speech-to-Text (wo-SN) ou ElevenLabs Scribe, mais elle se trompe sur environ 40 % des mots. Aucune API hébergée ne fait parler le bot en wolof : il existe seulement des modèles ouverts à installer, de qualité inconnue. Solution de repli pour la démo : des vocaux préenregistrés.
+- **Boutons et fenêtre de 24 h** : WhatsApp n'autorise un message libre (avec boutons) envoyé à l'initiative du bot que dans les 24 h qui suivent le dernier message de la personne. Au-delà, il faut un modèle de message validé à l'avance par Meta, qui peut aussi contenir des boutons. Pour la démo, le téléphone qui joue la pharmacie aura écrit au bot peu avant, donc aucun modèle n'est nécessaire. À vérifier selon l'outil utilisé.
 
 ## Questions ouvertes
 
-- Comment une pharmacie répond-elle à une demande d'équivalent : texte libre, boutons, ou absence de réponse valant non ?
-- Demande d'équivalent : quelles pharmacies la reçoivent, combien de temps attend-on, et que dit le bot si aucune pharmacie ne répond ?
+- Demande d'équivalent : quand le bot revient-il vers la personne (au premier oui ou à la fin d'un délai), combien de temps attend-il, et quelles pharmacies la reçoivent ?
 - Parcours 3 : quel format exact pour les messages de rupture et de retour en stock ? Que se passe-t-il pour le retour en stock d'un médicament hors catalogue ?
 - Parcours 6 : que faire si la photo est illisible ou si un nom est mal lu ? L'image de l'ordonnance est-elle conservée ou transmise ?
 - Parcours 7 : pour la démo, la voix du bot vient-elle d'un modèle ouvert ou de vocaux préenregistrés ?
