@@ -18,6 +18,10 @@ _À éviter_ : Prescription, papier du médecin
 Étape où la personne valide ou corrige les noms de médicaments que PharmaSûr a lus sur sa photo, avant la recherche, à l'écrit ou à l'oral selon la façon dont elle écrit au service.
 _À éviter_ : Confirmation (seul), validation
 
+**Correction de lecture** :
+Couple formé par un nom de médicament mal lu par PharmaSûr et le nom corrigé par la personne pendant la confirmation de lecture (par exemple « smekta → Smecta »). C'est la seule trace qui reste d'une photo.
+_À éviter_ : Erreur de lecture, feedback
+
 **Introuvable** :
 Se dit d'un médicament d'une recherche qu'aucune pharmacie partenaire n'a en stock.
 _À éviter_ : Rupture générale, indisponible partout

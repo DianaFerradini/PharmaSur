@@ -130,6 +130,13 @@ Ne sont pas dans la démo : l'inscription d'une pharmacie (le catalogue est simu
 
 - **Décision** : quand le bot ne peut pas lire la photo (floue, écriture illisible), il propose les deux voies : reprendre la photo, avec un conseil (plus de lumière, plus près, bien à plat), ou écrire ou dire le nom du médicament. Si une partie seulement est lisible, la confirmation de lecture (D13) montre ce qui a été lu, signale le médicament non lu et propose les mêmes deux voies pour celui-ci.
 
+### D22 — L'image est supprimée, seules les corrections sont gardées
+
+- **Décision** : l'image (ordonnance ou boîte) est supprimée dès la confirmation de lecture, et elle n'est jamais transmise aux pharmacies. PharmaSûr garde seulement les **corrections de lecture**, c'est-à-dire les couples « lu → corrigé » (par exemple « smekta → Smecta »), sans image ni numéro.
+- **Pourquoi** : une ordonnance contient le nom du patient, celui du médecin, parfois un diagnostic. Ne pas la garder supprime le risque de fuite. Les corrections suffisent à améliorer la reconnaissance des noms de médicaments.
+- **Condition** : choisir un service de lecture d'image qui ne conserve pas les images et ne s'en sert pas pour entraîner ses modèles.
+- **Écarté** : conserver les images pour améliorer la lecture. Il faudrait des extraits découpés, un consentement explicite, un masquage, du chiffrement et une démarche auprès de la CDP (les données de santé sont sensibles). Rien de tout ça n'est réalisable en deux jours, et une fuite serait grave. Cette option pourra être reprise plus tard, avec ces protections.
+
 ## Pharmacie (parcours 3)
 
 ### D18 — Rupture et retour en stock en texte libre
@@ -164,6 +171,7 @@ Ne sont pas dans la démo : l'inscription d'une pharmacie (le catalogue est simu
   - Du numéro de la personne, PharmaSûr garde seulement **le numéro et la date du premier contact**, pour savoir s'il doit envoyer l'accueil.
   - Les recherches sont conservées **sans lien avec le numéro** : médicaments cherchés, introuvables, date, et pharmacies qui avaient chaque médicament.
   - Le lien entre le numéro et une demande d'équivalent en cours est effacé dès que la demande est close, au plus tard après 23 heures (D17).
+  - Les images sont supprimées dès la confirmation de lecture ; seules les corrections de lecture sont gardées, sans image ni numéro (D22).
 - **Écarté** : un historique des recherches par personne, qui lierait des données de santé à quelqu'un.
 
 ## Options en suspens
@@ -185,7 +193,6 @@ Ne sont pas dans la démo : l'inscription d'une pharmacie (le catalogue est simu
 
 ## Questions ouvertes
 
-- Parcours 6 : l'image de l'ordonnance est-elle conservée ou transmise ?
 - Parcours 7 : pour la démo, la voix du bot vient-elle d'un modèle ouvert ou de vocaux préenregistrés ?
 - Dans quelle langue répond le bot : la même que la personne, en français ou en wolof ?
 - Dans quel ordre présenter les pharmacies dans les résultats ?
