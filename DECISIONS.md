@@ -251,6 +251,15 @@ Ne sont pas dans la démo : l'inscription d'une pharmacie (le catalogue est simu
 - **Pourquoi** : c'est le langage le plus lisible pour les membres de l'équipe qui codent peu, ce qui leur permet de retoucher un texte ou une règle sans aide. Il est aussi pratique pour les comptages du résumé et du tableau de bord, et c'est le langage des modèles wolof ouverts, si on en a besoin plus tard.
 - **Limites acceptées** : la page web demandera quand même un peu de JavaScript côté navigateur. Le Python installé vient du Microsoft Store, ce qui peut poser des soucis de chemins au moment de créer l'environnement.
 
+### D31 — Développement sur le PC, puis mise en ligne avant le pré-pitch
+
+- **16/11** : le bot tourne sur le PC, exposé par ngrok (compte gratuit, adresse fixe déclarée une seule fois chez Meta). Chaque modification est visible tout de suite.
+- **17/11 au matin** : mise en ligne sur **Railway**, branché sur le dépôt GitHub, qui redéploie automatiquement à chaque push. Si Railway ne convient pas : Render gratuit, avec une requête envoyée toutes les 10 minutes (UptimeRobot) pour éviter la mise en veille.
+- **Solution de secours pendant les pitchs** : le PC reste prêt avec ngrok. Si l'hébergeur tombe, on remet l'adresse ngrok dans Meta (environ une minute).
+- **Pourquoi** : en ligne, le bot ne dépend plus du PC qui sert aux slides, ni de sa veille, ni du Wi-Fi de la salle.
+- **À savoir** : les données repartent de zéro à chaque redéploiement. Les données simulées sont rechargées au démarrage, donc chaque passage démarre dans un état propre.
+- **Comptes à créer par l'équipe** : Meta, ngrok et Railway.
+
 ## Options en suspens
 
 - **« Introuvables partout » dans le résumé** : une ligne comme « Introuvables chez toutes les pharmacies partenaires : Smecta (12 recherches) ». L'option est valable et sera tranchée pendant l'implémentation. Condition : une formulation neutre, jamais d'incitation à s'approvisionner, et une vérification par les juristes du groupe.
