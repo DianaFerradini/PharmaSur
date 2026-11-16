@@ -74,6 +74,14 @@ Ne sont pas dans la démo : l'inscription d'une pharmacie (le catalogue est simu
 - **Cible** : en plus, les horaires (ouverte ou fermée) et l'indication « de garde ».
 - **Pourquoi** : stocker et tenir à jour les horaires et les gardes sort du périmètre de la démo.
 
+### D25 — Ordre des pharmacies dans les résultats
+
+- **Démo** : d'abord les pharmacies qui ont le plus de médicaments de la liste. À nombre égal, l'ordre est tiré au hasard à chaque recherche.
+- **Cible** : d'abord le nombre de médicaments, puis la distance à nombre égal.
+- **Pourquoi** : la personne veut faire un seul trajet, donc la pharmacie qui a tout passe en premier. Le hasard entre ex æquo évite d'avantager toujours les mêmes pharmacies.
+- **Écarté** : l'ordre alphabétique (n'aide pas la personne et avantage toujours les mêmes) et un ordre entièrement aléatoire (peut mettre en tête une pharmacie qui n'a qu'un médicament).
+- **Note pour la démo** : l'ordre des ex æquo change d'une répétition à l'autre, donc ne pas annoncer à l'avance quelle pharmacie sera première.
+
 ### D8 — Premier message et accueil
 
 - **Décision** :
@@ -222,7 +230,6 @@ Ne sont pas dans la démo : l'inscription d'une pharmacie (le catalogue est simu
 
 ## Questions ouvertes
 
-- Dans quel ordre présenter les pharmacies dans les résultats ?
 - Page web : pour qui, et pour quoi faire ?
 
 ## À reprendre dans le dossier
