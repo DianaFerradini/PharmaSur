@@ -204,7 +204,8 @@ Ne sont pas dans la démo : l'inscription d'une pharmacie (le catalogue est simu
 
 ### D26 — D'abord une page de présentation, sans connexion
 
-- **Décision** : la priorité est une page de présentation, pour le jury et le public. Elle explique ce que fait PharmaSûr, affiche un QR code qui ouvre le bot WhatsApp et rappelle que rien ne s'achète ici. Ensuite, si le temps le permet : une recherche depuis le navigateur, un tableau de bord de statistiques anonymes, ou les deux (à trancher).
+- **Décision** : la priorité est une page de présentation, pour le jury et le public. Elle explique ce que fait PharmaSûr, affiche un QR code qui ouvre le bot WhatsApp et rappelle que rien ne s'achète ici. Ensuite, si le temps le permet, un **tableau de bord de statistiques anonymes**, en lecture seule, alimenté par les recherches simulées. En dernier, et seulement s'il reste encore du temps, une recherche depuis le navigateur.
+- **Pourquoi le tableau de bord avant la recherche** : la recherche est déjà montrée sur WhatsApp. Le tableau de bord montre au jury quelque chose de nouveau, l'angle des données et des institutions (ARP, SEN-PNA, financeurs). Il illustre aussi le modèle économique, sans ajouter un second canal qui brouillerait le message « WhatsApp, sans rien installer ».
 - **Exclu** : tout espace pharmacie (résumé, état du stock), car il faudrait gérer des comptes et des connexions.
 - **Conséquence** : sans connexion, tout ce qui est sur le site est public. Un éventuel tableau de bord ne doit montrer que des chiffres globaux, jamais le stock ou la demande manquée d'une pharmacie précise, qui restent dans son résumé WhatsApp (D14).
 
@@ -238,7 +239,7 @@ Ne sont pas dans la démo : l'inscription d'une pharmacie (le catalogue est simu
 
 ## Questions ouvertes
 
-- Page web, après la page de présentation : recherche depuis le navigateur, tableau de bord de statistiques anonymes, ou les deux ? Laquelle en premier ?
+- Qu'est-ce qui fait que deux médicaments sont « le même » pour le bot : le nom commercial, le dosage, la forme, le principe actif ?
 
 ## À reprendre dans le dossier
 
