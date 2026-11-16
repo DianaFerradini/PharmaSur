@@ -245,6 +245,12 @@ Ne sont pas dans la démo : l'inscription d'une pharmacie (le catalogue est simu
   - Le reste du bot exprime les choix de façon neutre (« Oui / Non »). Avec Meta, ils s'affichent en boutons ; avec Twilio, où le bac à sable ne permet sans doute pas les boutons, ils s'afficheraient en réponses numérotées (« 1. Oui, 2. Non »).
   - Coût estimé d'une bascule : environ 15 minutes de compte Twilio et 1 à 2 heures de code.
 
+### D30 — Le bot est écrit en Python
+
+- **Décision** : le bot est écrit en Python (3.13).
+- **Pourquoi** : c'est le langage le plus lisible pour les membres de l'équipe qui codent peu, ce qui leur permet de retoucher un texte ou une règle sans aide. Il est aussi pratique pour les comptages du résumé et du tableau de bord, et c'est le langage des modèles wolof ouverts, si on en a besoin plus tard.
+- **Limites acceptées** : la page web demandera quand même un peu de JavaScript côté navigateur. Le Python installé vient du Microsoft Store, ce qui peut poser des soucis de chemins au moment de créer l'environnement.
+
 ## Options en suspens
 
 - **« Introuvables partout » dans le résumé** : une ligne comme « Introuvables chez toutes les pharmacies partenaires : Smecta (12 recherches) ». L'option est valable et sera tranchée pendant l'implémentation. Condition : une formulation neutre, jamais d'incitation à s'approvisionner, et une vérification par les juristes du groupe.
