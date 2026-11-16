@@ -80,6 +80,12 @@ Ne sont pas dans la démo : l'inscription d'une pharmacie (le catalogue est simu
 - **Limite** : un autre nom commercial au même principe actif (Efferalgan pour Doliprane) n'est jamais compté, parce que ce serait proposer un équivalent (D11).
 - **Écarté** : exiger toujours le dosage et la forme (une question de plus), et comparer par principe actif (revient à proposer des équivalents).
 
+### D28 — Un principe actif se cherche comme un nom de médicament
+
+- **Décision** : si la personne donne un principe actif (« amoxicilline 500 mg »), le bot fait une recherche normale. Il compte les produits dont le nom contient ce mot (« Amoxicilline Denk 500 mg »). S'il n'en trouve aucun, le médicament est introuvable, et le parcours habituel s'applique : une demande d'équivalent aux pharmacies, avec l'accord de la personne (D10).
+- **Pourquoi** : le bot n'a pas besoin de savoir si un mot est un principe actif ou une marque, ni de connaître la composition des médicaments. Le choix d'une marque correspondante (Clamoxyl, par exemple) revient au pharmacien, à travers la demande d'équivalent.
+- **Écarté** : compter toutes les marques qui contiennent ce principe actif (il faudrait une base de composition, et ça ressemble à une substitution) et demander le nom commercial (bloque les ordonnances rédigées en principe actif).
+
 ### D25 — Ordre des pharmacies dans les résultats
 
 - **Démo** : d'abord les pharmacies qui ont le plus de médicaments de la liste. À nombre égal, l'ordre est tiré au hasard à chaque recherche.
@@ -245,7 +251,12 @@ Ne sont pas dans la démo : l'inscription d'une pharmacie (le catalogue est simu
 
 ## Questions ouvertes
 
-- Si la personne donne un principe actif plutôt qu'un nom commercial (« amoxicilline 500 mg », comme sur beaucoup d'ordonnances), quels produits le bot compte-t-il ?
+Aucune pour les parcours. Ces points restent à régler pendant l'implémentation :
+
+- ce que fait le bot si la personne lance une nouvelle recherche alors qu'une demande d'équivalent est en cours ;
+- ce que fait le bot si une pharmacie touche « Oui » après les 23 heures ;
+- le contenu exact de la page de présentation et du tableau de bord (D26) ;
+- l'option « introuvables partout » dans le résumé.
 
 ## À reprendre dans le dossier
 
