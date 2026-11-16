@@ -126,6 +126,10 @@ Ne sont pas dans la démo : l'inscription d'une pharmacie (le catalogue est simu
 - **Décision** : avant la recherche, la personne valide ou corrige les noms lus sur sa photo. La confirmation se fait à l'écrit si elle écrit, à l'oral si elle parle.
 - **Réserve** : la confirmation à l'oral n'est peut-être pas faisable en deux jours.
 
+### D21 — Photo illisible : reprendre la photo ou donner le nom
+
+- **Décision** : quand le bot ne peut pas lire la photo (floue, écriture illisible), il propose les deux voies : reprendre la photo, avec un conseil (plus de lumière, plus près, bien à plat), ou écrire ou dire le nom du médicament. Si une partie seulement est lisible, la confirmation de lecture (D13) montre ce qui a été lu, signale le médicament non lu et propose les mêmes deux voies pour celui-ci.
+
 ## Pharmacie (parcours 3)
 
 ### D18 — Rupture et retour en stock en texte libre
@@ -181,7 +185,7 @@ Ne sont pas dans la démo : l'inscription d'une pharmacie (le catalogue est simu
 
 ## Questions ouvertes
 
-- Parcours 6 : que faire si la photo est illisible ou si un nom est mal lu ? L'image de l'ordonnance est-elle conservée ou transmise ?
+- Parcours 6 : l'image de l'ordonnance est-elle conservée ou transmise ?
 - Parcours 7 : pour la démo, la voix du bot vient-elle d'un modèle ouvert ou de vocaux préenregistrés ?
 - Dans quelle langue répond le bot : la même que la personne, en français ou en wolof ?
 - Dans quel ordre présenter les pharmacies dans les résultats ?
