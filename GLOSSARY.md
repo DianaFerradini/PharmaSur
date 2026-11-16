@@ -66,6 +66,14 @@ _À éviter_ : Réapprovisionnement, réassort
 Médicament qui a le même principe actif que celui recherché. Seul un pharmacien peut le proposer, au comptoir ; PharmaSûr ne le suggère ni ne le nomme jamais.
 _À éviter_ : Générique, substitut, alternative
 
+**Résumé** :
+Bilan qu'une pharmacie partenaire obtient sur demande : combien de fois elle est apparue dans les résultats, et sa demande manquée. Il ne contient que des chiffres, jamais l'identité d'une personne.
+_À éviter_ : Rapport, tableau de bord, statistiques
+
+**Demande manquée** :
+Pour une pharmacie partenaire, les médicaments recherchés qu'elle n'avait pas au moment de la recherche, hors catalogue ou en rupture, avec le nombre de recherches pour chacun.
+_À éviter_ : Ventes perdues, demande non satisfaite
+
 **Demande d'équivalent** :
 Message que PharmaSûr envoie aux pharmacies partenaires, avec l'accord de la personne qui cherche, quand un médicament recherché est introuvable, pour savoir si l'une d'elles a un équivalent.
 _À éviter_ : Notification, alerte pharmacie
