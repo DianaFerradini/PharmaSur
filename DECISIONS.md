@@ -106,6 +106,13 @@ Ne sont pas dans la démo : l'inscription d'une pharmacie (le catalogue est simu
 - **Décision** : la demande d'équivalent arrive avec des boutons de réponse (par exemple « Oui, j'ai une solution » et « Non »). Le pharmacien touche un bouton ; tant qu'il ne touche rien, sa réponse compte comme un non.
 - **Pourquoi** : un seul geste quand il a une solution, et aucune action exigée sinon. Ça respecte le principe de ne pas charger les pharmaciens.
 
+### D17 — Les « oui » sont transmis au fil de l'eau, pendant 23 heures
+
+- **Décision** : la demande d'équivalent reste ouverte 23 heures. Chaque fois qu'une pharmacie touche « Oui », la personne est prévenue tout de suite. Si aucune pharmacie n'a dit oui au bout de 23 heures, le bot lui dit qu'aucune pharmacie partenaire n'a de solution et l'oriente vers un pharmacien.
+- **Démo** : toutes les pharmacies partenaires reçoivent la demande, puisque le bot ne demande pas la position (D6). Le message de fin de délai ne sera pas montré.
+- **Pourquoi 23 heures** : un délai court laisserait trop peu de temps aux pharmaciens pour répondre. Et WhatsApp n'autorise un message libre que dans les 24 heures qui suivent le dernier message de la personne : 23 heures garantit que le message de fin de délai passe.
+- **Écarté** : un seul message à la fin du délai (trop lent si la personne est pressée) et un récapitulatif des « oui » suivants (l'information arriverait parfois 20 heures après).
+
 ## Photo (parcours 6)
 
 ### D12 — La photo d'ordonnance est acceptée
@@ -135,7 +142,7 @@ Ne sont pas dans la démo : l'inscription d'une pharmacie (le catalogue est simu
 - **Décision** :
   - Du numéro de la personne, PharmaSûr garde seulement **le numéro et la date du premier contact**, pour savoir s'il doit envoyer l'accueil.
   - Les recherches sont conservées **sans lien avec le numéro** : médicaments cherchés, introuvables, date, et pharmacies qui avaient chaque médicament.
-  - Le lien entre le numéro et une demande d'équivalent en cours est effacé dès que la demande est close.
+  - Le lien entre le numéro et une demande d'équivalent en cours est effacé dès que la demande est close, au plus tard après 23 heures (D17).
 - **Écarté** : un historique des recherches par personne, qui lierait des données de santé à quelqu'un.
 
 ## Options en suspens
@@ -149,7 +156,6 @@ Ne sont pas dans la démo : l'inscription d'une pharmacie (le catalogue est simu
 
 ## Questions ouvertes
 
-- Demande d'équivalent : quand le bot revient-il vers la personne (au premier oui ou à la fin d'un délai), combien de temps attend-il, et quelles pharmacies la reçoivent ?
 - Parcours 3 : quel format exact pour les messages de rupture et de retour en stock ? Que se passe-t-il pour le retour en stock d'un médicament hors catalogue ?
 - Parcours 6 : que faire si la photo est illisible ou si un nom est mal lu ? L'image de l'ordonnance est-elle conservée ou transmise ?
 - Parcours 7 : pour la démo, la voix du bot vient-elle d'un modèle ouvert ou de vocaux préenregistrés ?
