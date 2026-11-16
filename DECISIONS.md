@@ -283,6 +283,38 @@ Ordre de construction : 1, 6, 2 et 7 pour le quart de finale, puis 3 s'il reste 
   - Sans le parcours 3, l'enchaînement du jury va de la photo de l'ordonnance au vocal (voir [PARCOURS.md](PARCOURS.md)).
 - **Écarté** : viser tout l'enchaînement pour le pré-pitch, un cœur sans photo ni vocal, et faire passer le côté pharmacie (parcours 3) avant la photo et le vocal.
 
+_D34 à D38 sont des choix purement techniques, que l'agent a tranchés à la demande de l'utilisateur le 16/11. Ils ne changent rien à ce que voient les utilisateurs, et chacun peut être contesté._
+
+### D34 — Le serveur est écrit avec FastAPI
+
+- **Décision** : le bot est un petit serveur web FastAPI, lancé avec uvicorn. Les appels à Meta et à ElevenLabs passent par httpx, et les appels à Claude par le SDK officiel `anthropic`.
+- **Pourquoi** : Meta exige une réponse rapide à chaque message reçu. FastAPI répond tout de suite et traite le message ensuite, sans bloquer les autres messages.
+
+### D35 — Les données sont dans une base SQLite
+
+- **Décision** : un seul fichier SQLite, avec le module `sqlite3` fourni avec Python, sans autre outil. S'il n'existe pas au démarrage, il est créé et rempli avec les données simulées de [PARCOURS.md](PARCOURS.md). Une commande le remet à zéro avant chaque répétition.
+- **Pourquoi** : pendant le développement, le serveur redémarre à chaque modification du code. Avec des données gardées en mémoire, on perdrait à chaque fois la demande d'équivalent en cours. Les comptages du résumé et du tableau de bord se font aussi simplement en SQL.
+- **Sur Railway** : le disque est effacé à chaque redéploiement, donc la base repart des données simulées (D31).
+- **Rappel** : la structure respecte D15. Les recherches n'ont aucun lien avec le numéro.
+
+### D36 — Le délai de 23 heures est vérifié chaque minute
+
+- **Décision** : chaque demande d'équivalent est enregistrée avec son heure de fin. Une boucle du serveur vérifie chaque minute les demandes arrivées à échéance et envoie le message de fin (D17).
+- **Pourquoi** : l'heure de fin est dans la base. Après un redémarrage du serveur, la boucle reprend donc les demandes là où elles en étaient, sans outil de planification en plus.
+- **Limite acceptée** : un redéploiement sur Railway efface les demandes en cours (D35). C'est sans effet sur la démo, où le message de fin n'est pas montré.
+
+### D37 — Les vocaux sont enregistrés directement dans WhatsApp
+
+- **Décision** : la personne qui parle wolof enregistre les 12 vocaux (D24) comme des messages vocaux WhatsApp, envoyés à un membre de l'équipe, qui les télécharge depuis WhatsApp Web. Ils sont déjà au format OGG/Opus, le seul que WhatsApp affiche comme message vocal, donc il n'y a rien à convertir.
+- **Si un vocal arrive dans un autre format** (application dictaphone, par exemple) : l'agent le convertit avec la bibliothèque Python PyAV, qui inclut ffmpeg.
+- **Les vocaux de Fatou** arrivent eux aussi en OGG/Opus, un format qu'ElevenLabs accepte tel quel.
+
+### D38 — Les secrets restent hors du dépôt
+
+- **Sur le PC** : un fichier `.env` jamais commité (listé dans `.gitignore`). Le dépôt contient seulement un `.env.example` avec les noms des variables, sans leurs valeurs.
+- **Sur Railway** : les mêmes variables, saisies dans l'onglet Variables du service.
+- **Contenu** : les clés Meta (jeton permanent, identifiant du numéro, jeton de vérification du webhook, secret de l'application pour vérifier la signature des messages reçus), la clé Anthropic, la clé ElevenLabs, ainsi que le vrai numéro du téléphone qui joue Baobab. Les numéros de l'équipe ne figurent donc pas dans le code.
+
 ## Options en suspens
 
 - **« Introuvables partout » dans le résumé** : une ligne comme « Introuvables chez toutes les pharmacies partenaires : Smecta (12 recherches) ». L'option est valable et sera tranchée pendant l'implémentation. Condition : une formulation neutre, jamais d'incitation à s'approvisionner, et une vérification par les juristes du groupe.
