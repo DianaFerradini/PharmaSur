@@ -87,7 +87,7 @@ Ne sont pas dans la démo : l'inscription d'une pharmacie (le catalogue est simu
 
 ### D9 — Messages hors sujet
 
-- **Démo** : une réponse unique qui renvoie vers un pharmacien, sauf pour une **urgence**, à laquelle le bot répond par un numéro d'urgence (à vérifier).
+- **Démo** : une réponse unique qui renvoie vers un pharmacien, sauf pour une **urgence**, à laquelle le bot répond par les numéros d'urgence : SAMU **1515** et sapeurs-pompiers **18** (voir les éléments techniques).
 - **Cible** : une réponse adaptée à chaque cas. Une question de santé renvoie vers le pharmacien ou le médecin, une question de prix vers la pharmacie, une demande de commande reçoit un non clair, et une urgence reçoit un numéro d'urgence.
 
 ## Médicament introuvable (parcours 2)
@@ -154,6 +154,14 @@ Ne sont pas dans la démo : l'inscription d'une pharmacie (le catalogue est simu
 - **Vocal wolof** : la transcription est possible avec Google Cloud Speech-to-Text (wo-SN) ou ElevenLabs Scribe, mais elle se trompe sur environ 40 % des mots. Aucune API hébergée ne fait parler le bot en wolof : il existe seulement des modèles ouverts à installer, de qualité inconnue. Solution de repli pour la démo : des vocaux préenregistrés.
 - **Boutons et fenêtre de 24 h** : WhatsApp n'autorise un message libre (avec boutons) envoyé à l'initiative du bot que dans les 24 h qui suivent le dernier message de la personne. Au-delà, il faut un modèle de message validé à l'avance par Meta, qui peut aussi contenir des boutons. Pour la démo, le téléphone qui joue la pharmacie aura écrit au bot peu avant, donc aucun modèle n'est nécessaire. À vérifier selon l'outil utilisé.
 
+- **Numéros d'urgence au Sénégal** (vérifiés le 16/11/2026) :
+  - SAMU **1515**, urgence médicale, gratuit ([samu.sn](https://samu.sn/)) ;
+  - sapeurs-pompiers **18** ;
+  - police **17** ;
+  - gendarmerie **123**.
+
+  Les trois derniers numéros viennent de France Diplomatie et du FCDO. À éviter : le « 15 » donné par le FCDO pour les ambulances, qui n'est pas confirmé par le SAMU, et le « 112 », qui n'est cité que par une seule source.
+
 ## Questions ouvertes
 
 - Parcours 3 : quel format exact pour les messages de rupture et de retour en stock ? Que se passe-t-il pour le retour en stock d'un médicament hors catalogue ?
@@ -162,7 +170,6 @@ Ne sont pas dans la démo : l'inscription d'une pharmacie (le catalogue est simu
 - Dans quelle langue répond le bot : la même que la personne, en français ou en wolof ?
 - Dans quel ordre présenter les pharmacies dans les résultats ?
 - Page web : pour qui, et pour quoi faire ?
-- Quels numéros d'urgence donner au Sénégal ?
 
 ## À reprendre dans le dossier
 
