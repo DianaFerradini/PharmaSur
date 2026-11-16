@@ -133,6 +133,12 @@ Ne sont pas dans la démo : l'inscription d'une pharmacie (le catalogue est simu
 - **Décision** : la pharmacie signale une rupture ou un retour en stock en écrivant comme elle parle, par exemple « Smecta pas disponible », « plus de Smecta » ou « Smecta est revenu ». Le bot comprend le message, sans format imposé, sans mot-clé ni menu.
 - **Écarté** : un mot-clé fixe (« rupture Smecta ») et une liste WhatsApp, limitée à 10 lignes.
 
+### D19 — Le bot ne demande confirmation qu'en cas de doute
+
+- **Décision** : quand le bot est sûr d'avoir compris, il applique le signalement tout de suite et accuse réception (« ✅ Smecta noté en rupture »). Il ne demande de confirmation, avec les boutons Oui et Non, que s'il a un doute : nom approximatif (« smekta »), médicament hors catalogue ou message ambigu.
+- **Pourquoi** : aucun geste de plus dans le cas courant, mais pas de stock faussé quand le message est flou.
+- **Écarté** : appliquer sans jamais confirmer (risque de résultats faux) et toujours confirmer (un geste de plus à chaque signalement).
+
 ### D14 — Le résumé de la pharmacie
 
 - **Décision** : la pharmacie écrit « résumé » et reçoit deux chiffres : le nombre de résultats où elle est apparue, et sa **demande manquée** (les médicaments recherchés qu'elle n'avait pas, avec le nombre de recherches pour chacun). Le résumé n'est envoyé que sur demande, sans notification.
@@ -169,7 +175,7 @@ Ne sont pas dans la démo : l'inscription d'une pharmacie (le catalogue est simu
 
 ## Questions ouvertes
 
-- Parcours 3 : le bot confirme-t-il ce qu'il a compris avant de modifier le stock ? Que se passe-t-il pour le retour en stock d'un médicament hors catalogue ?
+- Parcours 3 : que se passe-t-il quand une pharmacie signale une rupture ou un retour en stock pour un médicament hors de son catalogue ?
 - Parcours 6 : que faire si la photo est illisible ou si un nom est mal lu ? L'image de l'ordonnance est-elle conservée ou transmise ?
 - Parcours 7 : pour la démo, la voix du bot vient-elle d'un modèle ouvert ou de vocaux préenregistrés ?
 - Dans quelle langue répond le bot : la même que la personne, en français ou en wolof ?
