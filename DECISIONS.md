@@ -260,13 +260,22 @@ Ne sont pas dans la démo : l'inscription d'une pharmacie (le catalogue est simu
 - **À savoir** : les données repartent de zéro à chaque redéploiement. Les données simulées sont rechargées au démarrage, donc chaque passage démarre dans un état propre.
 - **Comptes à créer par l'équipe** : Meta, ngrok et Railway.
 
+### D32 — Les vocaux en wolof sont transcrits par ElevenLabs Scribe
+
+- **Démo** : ElevenLabs Scribe, avec l'offre gratuite. L'option « Data use » (entraînement sur les données) est désactivée dans les réglages du compte avant le premier envoi.
+- **Cible** : Google Cloud Speech-to-Text (wolof `wo-SN`, modèle Chirp), qui ne garde ni l'audio ni le texte par défaut, ou l'offre entreprise d'ElevenLabs sans conservation. C'est la même exigence que pour les photos (D22), puisque le vocal contient des noms de médicaments.
+- **Pourquoi** : les deux services se trompent sur environ 40 % des mots, et le prix est négligeable dans les deux cas (quelques centimes pour toute la démo). Le compte ElevenLabs se crée en quelques minutes, contre 20 à 30 minutes et une carte bancaire pour Google. Les vocaux de la démo sont enregistrés par l'équipe, pas par de vrais patients.
+- **Pour garder la bascule possible** : la transcription est isolée dans une seule fonction. Si le premier vocal de test donne un texte inutilisable, on essaie Google.
+- **Écarté** : Google pour la démo (mise en place plus longue) et un test des deux avant de choisir (environ une heure de plus).
+- **Compte à créer par l'équipe** : ElevenLabs.
+
 ## Options en suspens
 
 - **« Introuvables partout » dans le résumé** : une ligne comme « Introuvables chez toutes les pharmacies partenaires : Smecta (12 recherches) ». L'option est valable et sera tranchée pendant l'implémentation. Condition : une formulation neutre, jamais d'incitation à s'approvisionner, et une vérification par les juristes du groupe.
 
 ## Éléments techniques
 
-- **Vocal wolof** : la transcription est possible avec Google Cloud Speech-to-Text (wo-SN) ou ElevenLabs Scribe, mais elle se trompe sur environ 40 % des mots. Aucune API hébergée ne fait parler le bot en wolof : il existe seulement des modèles ouverts à installer, de qualité inconnue. Solution de repli pour la démo : des vocaux préenregistrés.
+- **Vocal wolof** : la transcription est possible avec Google Cloud Speech-to-Text (wo-SN) ou ElevenLabs Scribe (retenu pour la démo, D32), mais elle se trompe sur environ 40 % des mots. Aucune API hébergée ne fait parler le bot en wolof : il existe seulement des modèles ouverts à installer, de qualité inconnue. Solution de repli pour la démo : des vocaux préenregistrés.
 - **Boutons et fenêtre de 24 h** : WhatsApp n'autorise un message libre (avec boutons) envoyé à l'initiative du bot que dans les 24 h qui suivent le dernier message de la personne. Au-delà, il faut un modèle de message validé à l'avance par Meta, qui peut aussi contenir des boutons. Pour la démo, le téléphone qui joue la pharmacie aura écrit au bot peu avant, donc aucun modèle n'est nécessaire. À vérifier selon l'outil utilisé.
 
 - **Numéros d'urgence au Sénégal** (vérifiés le 16/11/2026) :
@@ -281,6 +290,7 @@ Ne sont pas dans la démo : l'inscription d'une pharmacie (le catalogue est simu
 
 Aucune pour les parcours. Ces points restent à régler pendant l'implémentation :
 
+- le modèle d'IA qui comprend les messages et lit les photos (Claude Opus 5.5, Sonnet 5.5, Haiku 5.5, ou Haiku pour le texte et Opus pour les photos). Le choix dépend de ce que le groupe est prêt à payer : de moins de 1 $ à une dizaine de dollars pour la démo. Le code règle le modèle tâche par tâche, donc le choix peut se faire jusqu'au 17/11 au matin ;
 - ce que fait le bot si la personne lance une nouvelle recherche alors qu'une demande d'équivalent est en cours ;
 - ce que fait le bot si une pharmacie touche « Oui » après les 23 heures ;
 - le contenu exact de la page de présentation et du tableau de bord (D26) ;
