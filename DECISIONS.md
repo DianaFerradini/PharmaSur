@@ -200,6 +200,14 @@ Ne sont pas dans la démo : l'inscription d'une pharmacie (le catalogue est simu
 - **Cible** : un envoi automatique chaque semaine, en option.
 - **Pourquoi** : c'est l'argument de vente auprès des pharmacies. Phrase de pitch : « On ne vous vend pas de la visibilité, on vous montre les clients que vous ratez. »
 
+## Page web (17/11, s'il reste du temps)
+
+### D26 — D'abord une page de présentation, sans connexion
+
+- **Décision** : la priorité est une page de présentation, pour le jury et le public. Elle explique ce que fait PharmaSûr, affiche un QR code qui ouvre le bot WhatsApp et rappelle que rien ne s'achète ici. Ensuite, si le temps le permet : une recherche depuis le navigateur, un tableau de bord de statistiques anonymes, ou les deux (à trancher).
+- **Exclu** : tout espace pharmacie (résumé, état du stock), car il faudrait gérer des comptes et des connexions.
+- **Conséquence** : sans connexion, tout ce qui est sur le site est public. Un éventuel tableau de bord ne doit montrer que des chiffres globaux, jamais le stock ou la demande manquée d'une pharmacie précise, qui restent dans son résumé WhatsApp (D14).
+
 ## Données
 
 ### D15 — Ce que PharmaSûr conserve
@@ -230,7 +238,7 @@ Ne sont pas dans la démo : l'inscription d'une pharmacie (le catalogue est simu
 
 ## Questions ouvertes
 
-- Page web : pour qui, et pour quoi faire ?
+- Page web, après la page de présentation : recherche depuis le navigateur, tableau de bord de statistiques anonymes, ou les deux ? Laquelle en premier ?
 
 ## À reprendre dans le dossier
 
