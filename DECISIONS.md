@@ -8,6 +8,7 @@ _Dernière mise à jour : 16 novembre 2026_
 ## Contexte
 
 - **Objectif** : présenter une démo à un jury de concours. Le build se fait en deux jours, les 16 et 17 novembre 2026.
+- **Échéances** : pré-pitch le 17 novembre vers 16 h, quarts de finale à partir du mercredi 18 novembre au matin.
 - **Priorité** : le bot WhatsApp.
 - **Pharmacies** : il n'y aura sans doute pas de vraies pharmacies partenaires. Le stock et les pharmacies sont simulés, et un membre de l'équipe joue le pharmacien sur son téléphone.
 - **Page web** : le 17 novembre, s'il reste du temps. **Pas d'USSD.**
@@ -231,6 +232,18 @@ Ne sont pas dans la démo : l'inscription d'une pharmacie (le catalogue est simu
   - Le lien entre le numéro et une demande d'équivalent en cours est effacé dès que la demande est close, au plus tard après 23 heures (D17).
   - Les images sont supprimées dès la confirmation de lecture ; seules les corrections de lecture sont gardées, sans image ni numéro (D22).
 - **Écarté** : un historique des recherches par personne, qui lierait des données de santé à quelqu'un.
+
+## Technique
+
+### D29 — Accès WhatsApp : Meta, avec bascule possible vers Twilio
+
+- **Décision** : le bot passe par l'API officielle de Meta (WhatsApp Cloud API), avec le numéro de test gratuit. Si l'équipe préfère Twilio le 17/11, on bascule.
+- **Pourquoi Meta** : les boutons fonctionnent (D13, D16, D19, D20), il n'y a pas de limite de cadence, et c'est l'accès de la cible. Le jury teste rarement avec son propre téléphone.
+- **Limites acceptées** : seuls 5 numéros enregistrés à l'avance peuvent parler au bot, donc le QR code de la page de présentation ne marche que pour eux. Il faut aussi un jeton d'accès permanent, car le jeton temporaire expire en moins de 24 heures.
+- **Pour garder la bascule possible** :
+  - Tout ce qui dépend du fournisseur (réception des messages, envoi de texte, de boutons, d'images et de vocaux) est isolé dans un seul module.
+  - Le reste du bot exprime les choix de façon neutre (« Oui / Non »). Avec Meta, ils s'affichent en boutons ; avec Twilio, où le bac à sable ne permet sans doute pas les boutons, ils s'afficheraient en réponses numérotées (« 1. Oui, 2. Non »).
+  - Coût estimé d'une bascule : environ 15 minutes de compte Twilio et 1 à 2 heures de code.
 
 ## Options en suspens
 
