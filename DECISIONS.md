@@ -124,7 +124,7 @@ Ne sont pas dans la démo : l'inscription d'une pharmacie (le catalogue est simu
 ### D13 — Confirmation de lecture
 
 - **Décision** : avant la recherche, la personne valide ou corrige les noms lus sur sa photo. La confirmation se fait à l'écrit si elle écrit, à l'oral si elle parle.
-- **Réserve** : la confirmation à l'oral n'est peut-être pas faisable en deux jours.
+- **À l'oral** : le bot envoie un vocal fixe (« vérifiez les noms écrits ») avec la liste écrite des noms lus, puisque le vocal ne prononce aucun nom (D23, D24).
 
 ### D21 — Photo illisible : reprendre la photo ou donner le nom
 
@@ -144,6 +144,27 @@ Ne sont pas dans la démo : l'inscription d'une pharmacie (le catalogue est simu
 - **Décision** : le bot répond dans la langue et sous la forme de la personne. À un vocal en wolof, il répond par un vocal en wolof ; à un texte en français, par un texte en français. Les informations à garder (nom de la pharmacie, adresse, téléphone, itinéraire, noms des médicaments) sont toujours envoyées **aussi par écrit**, dans une fiche.
 - **Limite** : le vocal ne prononce jamais de nom de pharmacie ni de médicament, qui figurent seulement dans la fiche écrite. Aucun outil ne sait les prononcer correctement en wolof. Pour une personne qui ne lit pas, le bouton d'appel et le lien d'itinéraire restent utilisables, ou bien un proche lit la fiche.
 - **Écarté** : répondre en wolof écrit (peu de gens le lisent), et toujours en français écrit (exclut ceux qui ne lisent pas).
+
+### D24 — La voix du bot est préenregistrée
+
+- **Décision** : un membre de l'équipe qui parle wolof enregistre un vocal fixe par situation, et le bot envoie le bon enregistrement. Les noms et adresses sont dans la fiche écrite (D23).
+- **Pourquoi** : aucun service en ligne ne fait parler le wolof. Les modèles ouverts demandent un serveur avec carte graphique et leur qualité est inconnue. Une vraie voix, c'est environ une heure de travail et une qualité parfaite.
+- **Vocaux à enregistrer** :
+
+| # | Situation | Contenu du vocal | Décision |
+|---|---|---|---|
+| 1 | Accueil complet | Ce que fait PharmaSûr, comment envoyer sa recherche (écrire, photo, vocal), rien ne s'achète ici | D8 |
+| 2 | Accueil court | PharmaSûr dit quelles pharmacies ont vos médicaments ; rien ne s'achète ici | D8 |
+| 3 | Confirmation de lecture | Voici les médicaments lus, vérifiez-les dans le message écrit | D13 |
+| 4 | Photo illisible | Reprenez la photo (plus de lumière, plus près) ou dites le nom du médicament | D21 |
+| 5 | Résultats | Des pharmacies ont vos médicaments, les détails sont écrits ; achetez uniquement en pharmacie, avec votre ordonnance | D7, D8 |
+| 6 | Médicament introuvable | Ce médicament n'est disponible dans aucune pharmacie partenaire ; voulez-vous qu'on demande aux pharmacies si elles ont une solution ? | D10 |
+| 7 | Demande d'équivalent envoyée | On a demandé aux pharmacies, on vous prévient dès qu'une a une solution | D10, D17 |
+| 8 | Une pharmacie a une solution | Une pharmacie a peut-être une solution, son nom est écrit ; allez demander conseil au pharmacien | D11 |
+| 9 | Aucune solution après 23 h | Aucune pharmacie partenaire n'a de solution ; demandez conseil à un pharmacien | D17 |
+| 10 | Hors sujet | PharmaSûr indique seulement où trouver vos médicaments ; pour le reste, demandez à un pharmacien | D9 |
+| 11 | Urgence | Appelez le SAMU au 1515 ou les sapeurs-pompiers au 18 | D9 |
+| 12 | Message non compris | Je n'ai pas compris ; choisissez une option dans le menu écrit | D8 |
 
 ## Pharmacie (parcours 3)
 
@@ -201,7 +222,6 @@ Ne sont pas dans la démo : l'inscription d'une pharmacie (le catalogue est simu
 
 ## Questions ouvertes
 
-- Parcours 7 : pour la démo, la voix du bot vient-elle d'un modèle ouvert ou de vocaux préenregistrés ?
 - Dans quel ordre présenter les pharmacies dans les résultats ?
 - Page web : pour qui, et pour quoi faire ?
 
