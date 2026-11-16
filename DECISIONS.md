@@ -128,6 +128,11 @@ Ne sont pas dans la démo : l'inscription d'une pharmacie (le catalogue est simu
 
 ## Pharmacie (parcours 3)
 
+### D18 — Rupture et retour en stock en texte libre
+
+- **Décision** : la pharmacie signale une rupture ou un retour en stock en écrivant comme elle parle, par exemple « Smecta pas disponible », « plus de Smecta » ou « Smecta est revenu ». Le bot comprend le message, sans format imposé, sans mot-clé ni menu.
+- **Écarté** : un mot-clé fixe (« rupture Smecta ») et une liste WhatsApp, limitée à 10 lignes.
+
 ### D14 — Le résumé de la pharmacie
 
 - **Décision** : la pharmacie écrit « résumé » et reçoit deux chiffres : le nombre de résultats où elle est apparue, et sa **demande manquée** (les médicaments recherchés qu'elle n'avait pas, avec le nombre de recherches pour chacun). Le résumé n'est envoyé que sur demande, sans notification.
@@ -164,7 +169,7 @@ Ne sont pas dans la démo : l'inscription d'une pharmacie (le catalogue est simu
 
 ## Questions ouvertes
 
-- Parcours 3 : quel format exact pour les messages de rupture et de retour en stock ? Que se passe-t-il pour le retour en stock d'un médicament hors catalogue ?
+- Parcours 3 : le bot confirme-t-il ce qu'il a compris avant de modifier le stock ? Que se passe-t-il pour le retour en stock d'un médicament hors catalogue ?
 - Parcours 6 : que faire si la photo est illisible ou si un nom est mal lu ? L'image de l'ordonnance est-elle conservée ou transmise ?
 - Parcours 7 : pour la démo, la voix du bot vient-elle d'un modèle ouvert ou de vocaux préenregistrés ?
 - Dans quelle langue répond le bot : la même que la personne, en français ou en wolof ?
