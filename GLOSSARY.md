@@ -47,7 +47,7 @@ Pharmacie agréée qui fait partie du réseau PharmaSûr et dont le stock est co
 _À éviter_ : Officine, pharmacie inscrite
 
 **Catalogue** :
-Les médicaments qu'une pharmacie partenaire tient habituellement, déclarés une fois à son inscription. Hors catalogue, PharmaSûr ne sait pas si la pharmacie a le médicament.
+Les médicaments qu'une pharmacie partenaire tient habituellement. Ils sont déclarés à son inscription, puis complétés chaque fois qu'elle signale un médicament qui n'y figurait pas. Hors catalogue, PharmaSûr ne sait pas si la pharmacie a le médicament.
 _À éviter_ : Liste de départ, assortiment, référentiel
 
 **Stock** :

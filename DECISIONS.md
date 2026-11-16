@@ -139,6 +139,12 @@ Ne sont pas dans la démo : l'inscription d'une pharmacie (le catalogue est simu
 - **Pourquoi** : aucun geste de plus dans le cas courant, mais pas de stock faussé quand le message est flou.
 - **Écarté** : appliquer sans jamais confirmer (risque de résultats faux) et toujours confirmer (un geste de plus à chaque signalement).
 
+### D20 — Un médicament hors catalogue y entre après confirmation
+
+- **Décision** : quand une pharmacie signale un médicament absent de son catalogue, le bot lui demande toujours de confirmer. Une fois confirmé, le médicament entre dans le catalogue : comme disponible pour un retour en stock, comme en rupture pour une rupture.
+- **Pourquoi** : le catalogue déclaré à l'inscription est forcément incomplet, et il se complète ainsi au fil de l'usage, sans démarche à part.
+- **Écarté** : n'ajouter que les retours en stock, ou laisser l'équipe PharmaSûr mettre le catalogue à jour.
+
 ### D14 — Le résumé de la pharmacie
 
 - **Décision** : la pharmacie écrit « résumé » et reçoit deux chiffres : le nombre de résultats où elle est apparue, et sa **demande manquée** (les médicaments recherchés qu'elle n'avait pas, avec le nombre de recherches pour chacun). Le résumé n'est envoyé que sur demande, sans notification.
@@ -175,7 +181,6 @@ Ne sont pas dans la démo : l'inscription d'une pharmacie (le catalogue est simu
 
 ## Questions ouvertes
 
-- Parcours 3 : que se passe-t-il quand une pharmacie signale une rupture ou un retour en stock pour un médicament hors de son catalogue ?
 - Parcours 6 : que faire si la photo est illisible ou si un nom est mal lu ? L'image de l'ordonnance est-elle conservée ou transmise ?
 - Parcours 7 : pour la démo, la voix du bot vient-elle d'un modèle ouvert ou de vocaux préenregistrés ?
 - Dans quelle langue répond le bot : la même que la personne, en français ou en wolof ?
