@@ -137,6 +137,14 @@ Ne sont pas dans la démo : l'inscription d'une pharmacie (le catalogue est simu
 - **Condition** : choisir un service de lecture d'image qui ne conserve pas les images et ne s'en sert pas pour entraîner ses modèles.
 - **Écarté** : conserver les images pour améliorer la lecture. Il faudrait des extraits découpés, un consentement explicite, un masquage, du chiffrement et une démarche auprès de la CDP (les données de santé sont sensibles). Rien de tout ça n'est réalisable en deux jours, et une fuite serait grave. Cette option pourra être reprise plus tard, avec ces protections.
 
+## Langue et vocal (parcours 7)
+
+### D23 — Le bot répond comme la personne, avec une fiche écrite
+
+- **Décision** : le bot répond dans la langue et sous la forme de la personne. À un vocal en wolof, il répond par un vocal en wolof ; à un texte en français, par un texte en français. Les informations à garder (nom de la pharmacie, adresse, téléphone, itinéraire, noms des médicaments) sont toujours envoyées **aussi par écrit**, dans une fiche.
+- **Limite** : le vocal ne prononce jamais de nom de pharmacie ni de médicament, qui figurent seulement dans la fiche écrite. Aucun outil ne sait les prononcer correctement en wolof. Pour une personne qui ne lit pas, le bouton d'appel et le lien d'itinéraire restent utilisables, ou bien un proche lit la fiche.
+- **Écarté** : répondre en wolof écrit (peu de gens le lisent), et toujours en français écrit (exclut ceux qui ne lisent pas).
+
 ## Pharmacie (parcours 3)
 
 ### D18 — Rupture et retour en stock en texte libre
@@ -194,7 +202,6 @@ Ne sont pas dans la démo : l'inscription d'une pharmacie (le catalogue est simu
 ## Questions ouvertes
 
 - Parcours 7 : pour la démo, la voix du bot vient-elle d'un modèle ouvert ou de vocaux préenregistrés ?
-- Dans quelle langue répond le bot : la même que la personne, en français ou en wolof ?
 - Dans quel ordre présenter les pharmacies dans les résultats ?
 - Page web : pour qui, et pour quoi faire ?
 
