@@ -74,6 +74,12 @@ Ne sont pas dans la démo : l'inscription d'une pharmacie (le catalogue est simu
 - **Cible** : en plus, les horaires (ouverte ou fermée) et l'indication « de garde ».
 - **Pourquoi** : stocker et tenir à jour les horaires et les gardes sort du périmètre de la démo.
 
+### D27 — Un médicament est reconnu selon ce que la personne précise
+
+- **Décision** : le bot compare d'après ce que la personne donne. Si elle précise le dosage ou la forme (« Doliprane 1000 comprimés »), seuls ce dosage et cette forme comptent. Sinon (« Doliprane »), tous les dosages et toutes les formes de ce nom commercial comptent, et la fiche indique lesquels chaque pharmacie a.
+- **Limite** : un autre nom commercial au même principe actif (Efferalgan pour Doliprane) n'est jamais compté, parce que ce serait proposer un équivalent (D11).
+- **Écarté** : exiger toujours le dosage et la forme (une question de plus), et comparer par principe actif (revient à proposer des équivalents).
+
 ### D25 — Ordre des pharmacies dans les résultats
 
 - **Démo** : d'abord les pharmacies qui ont le plus de médicaments de la liste. À nombre égal, l'ordre est tiré au hasard à chaque recherche.
@@ -239,7 +245,7 @@ Ne sont pas dans la démo : l'inscription d'une pharmacie (le catalogue est simu
 
 ## Questions ouvertes
 
-- Qu'est-ce qui fait que deux médicaments sont « le même » pour le bot : le nom commercial, le dosage, la forme, le principe actif ?
+- Si la personne donne un principe actif plutôt qu'un nom commercial (« amoxicilline 500 mg », comme sur beaucoup d'ordonnances), quels produits le bot compte-t-il ?
 
 ## À reprendre dans le dossier
 

@@ -10,6 +10,10 @@ Service WhatsApp qui indique à une personne quelle pharmacie partenaire proche 
 La question posée au service : « quelles pharmacies proches ont ces médicaments ? ». Elle porte sur un ou plusieurs médicaments, souvent ceux d'une même ordonnance.
 _À éviter_ : Demande, requête, commande
 
+**Médicament** :
+Produit désigné par son nom commercial, éventuellement précisé par un dosage et une forme. Deux noms commerciaux différents sont deux médicaments différents, même s'ils ont le même principe actif.
+_À éviter_ : Produit, référence, molécule
+
 **Ordonnance** :
 Prescription écrite qui liste les médicaments du patient. PharmaSûr peut y lire les noms des médicaments pour lancer une recherche ; seul le pharmacien la vérifie.
 _À éviter_ : Prescription, papier du médecin
