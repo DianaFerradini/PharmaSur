@@ -10,3 +10,6 @@ __pycache__/
 # Base SQLite (D35) : recréée à partir des données simulées
 *.db
 *.db-journal
+
+# Fichiers verrous de Microsoft Office
+~$*

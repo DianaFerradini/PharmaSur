@@ -12,6 +12,7 @@ Ce que la base garde (D15) :
 
 from __future__ import annotations
 
+import json
 import logging
 import random
 import re
@@ -103,6 +104,21 @@ CREATE TABLE correction_lecture (
 );
 """
 
+# Ajoutée avec le parcours 6 : créée aussi dans une base qui existait déjà.
+SCHEMA_LECTURE = """
+-- Lecture d'une photo en attente de confirmation (D13). Jamais l'image : seulement les
+-- noms lus. Supprimée dès la confirmation (D22), et au plus tard après 24 h (D15).
+CREATE TABLE IF NOT EXISTS lecture_en_attente (
+    numero            TEXT PRIMARY KEY,
+    medicaments       TEXT NOT NULL,             -- liste JSON des noms lus, puis corrigés
+    non_lus           INTEGER NOT NULL DEFAULT 0, -- médicaments illisibles (D21)
+    premier_contact   INTEGER NOT NULL DEFAULT 0, -- accueil court à envoyer avant les résultats (D8)
+    attend_correction INTEGER NOT NULL DEFAULT 0, -- la personne a touché « Corriger »
+    cree_le           TEXT NOT NULL
+);
+"""
+DUREE_LECTURE_EN_ATTENTE = timedelta(hours=24)
+
 # --- Données simulées (PARCOURS.md, « Données simulées à préparer ») ---
 # Les noms, adresses et numéros sont fictifs, à remplacer.
 
@@ -177,11 +193,17 @@ def connecter(chemin: str) -> sqlite3.Connection:
 def initialiser(chemin: str, numero_baobab: str = "", graine: int | None = None) -> bool:
     """Crée et remplit la base si le fichier n'existe pas. Renvoie True si elle a été créée."""
     if Path(chemin).exists():
+        connexion = connecter(chemin)
+        try:
+            with connexion:
+                connexion.executescript(SCHEMA_LECTURE)  # tables ajoutées depuis la création
+        finally:
+            connexion.close()
         return False
     connexion = connecter(chemin)
     try:
         with connexion:
-            connexion.executescript(SCHEMA)
+            connexion.executescript(SCHEMA + SCHEMA_LECTURE)
             remplir(connexion, numero_baobab, random.Random(graine))
     finally:
         connexion.close()
@@ -291,6 +313,84 @@ def enregistrer_recherche(
                 [(medicament_id, r.pharmacie.id) for r in resultat.pharmacies if r.produits[i]],
             )
     return recherche_id
+
+
+# --- Lecture de photo en attente de confirmation (parcours 6, D13, D22) ---
+
+
+def _purger_lectures(connexion: sqlite3.Connection) -> None:
+    limite = (maintenant() - DUREE_LECTURE_EN_ATTENTE).isoformat()
+    connexion.execute("DELETE FROM lecture_en_attente WHERE cree_le < ?", (limite,))
+
+
+def enregistrer_lecture(
+    connexion: sqlite3.Connection, numero: str, medicaments: list[str], non_lus: int, premier_contact: bool
+) -> None:
+    """Remplace la lecture en attente de ce numéro (une nouvelle photo annule la précédente)."""
+    with connexion:
+        _purger_lectures(connexion)
+        connexion.execute(
+            "INSERT OR REPLACE INTO lecture_en_attente"
+            " (numero, medicaments, non_lus, premier_contact, attend_correction, cree_le) VALUES (?, ?, ?, ?, 0, ?)",
+            (normaliser_numero(numero), json.dumps(medicaments), non_lus, int(premier_contact), maintenant().isoformat()),
+        )
+
+
+def lire_lecture(connexion: sqlite3.Connection, numero: str) -> dict | None:
+    with connexion:
+        _purger_lectures(connexion)
+    ligne = connexion.execute(
+        "SELECT * FROM lecture_en_attente WHERE numero = ?", (normaliser_numero(numero),)
+    ).fetchone()
+    if ligne is None:
+        return None
+    return {
+        "medicaments": json.loads(ligne["medicaments"]),
+        "non_lus": ligne["non_lus"],
+        "premier_contact": bool(ligne["premier_contact"]),
+        "attend_correction": bool(ligne["attend_correction"]),
+    }
+
+
+def mettre_a_jour_lecture(
+    connexion: sqlite3.Connection,
+    numero: str,
+    *,
+    medicaments: list[str] | None = None,
+    non_lus: int | None = None,
+    attend_correction: bool | None = None,
+) -> None:
+    champs, valeurs = [], []
+    if medicaments is not None:
+        champs.append("medicaments = ?")
+        valeurs.append(json.dumps(medicaments))
+    if non_lus is not None:
+        champs.append("non_lus = ?")
+        valeurs.append(non_lus)
+    if attend_correction is not None:
+        champs.append("attend_correction = ?")
+        valeurs.append(int(attend_correction))
+    if not champs:
+        return
+    with connexion:
+        connexion.execute(
+            f"UPDATE lecture_en_attente SET {', '.join(champs)} WHERE numero = ?",
+            (*valeurs, normaliser_numero(numero)),
+        )
+
+
+def supprimer_lecture(connexion: sqlite3.Connection, numero: str) -> None:
+    """Efface le lien entre le numéro et les noms lus (D15, D22)."""
+    with connexion:
+        connexion.execute("DELETE FROM lecture_en_attente WHERE numero = ?", (normaliser_numero(numero),))
+
+
+def enregistrer_correction(connexion: sqlite3.Connection, lu: str, corrige: str) -> None:
+    """Garde seulement le couple « lu → corrigé », sans image ni numéro (D22)."""
+    with connexion:
+        connexion.execute(
+            "INSERT INTO correction_lecture (lu, corrige, date) VALUES (?, ?, ?)", (lu, corrige, maintenant().isoformat())
+        )
 
 
 __all__ = [

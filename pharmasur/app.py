@@ -5,6 +5,7 @@ Lancer en local : uvicorn pharmasur.app:app --reload --port 8000
 
 from __future__ import annotations
 
+import functools
 import logging
 from contextlib import asynccontextmanager
 from typing import Callable
@@ -15,6 +16,7 @@ from fastapi.responses import PlainTextResponse
 from . import db
 from .bot import traiter_message
 from .config import Config, charger_config
+from .ia import creer_analyseur, creer_client, creer_lecteur
 from .whatsapp import Fournisseur, MessageRecu
 from .whatsapp.meta import FournisseurMeta
 
@@ -41,6 +43,15 @@ def creer_app(
 ) -> FastAPI:
     config = config or charger_config()
     fournisseur = fournisseur or creer_fournisseur(config)
+    if traitement is traiter_message:
+        # Claude comprend les messages et lit les photos si une clé Anthropic est fournie ;
+        # sinon, repli provisoire.
+        client = creer_client(config)
+        analyseur = creer_analyseur(config, client)
+        lecteur = creer_lecteur(config, client)
+        if analyseur is None:
+            log.warning("ANTHROPIC_API_KEY est vide : le bot découpe les messages sans IA.")
+        traitement = functools.partial(traiter_message, analyseur=analyseur, lecteur=lecteur)
 
     @asynccontextmanager
     async def cycle_de_vie(_: FastAPI):

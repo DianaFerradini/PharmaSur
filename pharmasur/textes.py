@@ -20,8 +20,46 @@ ACCUEIL_COMPLET = (
 # D8 : menu de secours quand le bot ne comprend pas (contenu encore à ajuster).
 NON_COMPRIS = "Je n'ai pas compris 🙏 Répondez avec un chiffre :\n1. Chercher un médicament\n2. Comment ça marche"
 
+# D8 : salutation d'un numéro déjà venu, sans médicament, ou choix 1 du menu.
+INVITATION = "Envoyez-moi le nom de vos médicaments, une photo de l'ordonnance ou de la boîte, ou un vocal."
+SALUTATION_RETOUR = "Bonjour 👋 " + INVITATION
+
+# D8 : salutation avant les résultats d'un numéro déjà venu.
+SALUTATION = "Bonjour 👋"
+
+# D9 : message hors sujet (🔊 10).
+HORS_SUJET = "PharmaSûr indique seulement où trouver vos médicaments. Pour toute autre question, demandez à un pharmacien."
+
+# D9 : urgence (🔊 11).
+URGENCE = "🚨 Urgence : appelez le SAMU au 1515 ou les sapeurs-pompiers au 18."
+
 # D5, D10 : première ligne du message sur un médicament introuvable (parcours 2).
 INTROUVABLE = "🚫 {medicament} : introuvable aujourd'hui dans les pharmacies partenaires."
+
+# --- Parcours 6 : recherche par photo ---
+
+# D13 : confirmation de lecture.
+LECTURE_INTRO = "J'ai lu sur votre photo :"
+LECTURE_INTRO_CORRIGEE = "Voici votre liste corrigée :"
+LECTURE_QUESTION = "C'est bien ça ?"
+BOUTON_LECTURE_OUI = "✅ Oui"
+BOUTON_LECTURE_CORRIGER = "✏️ Corriger"
+
+# D21 : lecture partielle, ajoutée sous les noms lus.
+LECTURE_PARTIELLE_UN = "⚠️ Un médicament n'a pas pu être lu : reprenez la photo, ou écrivez ou dites son nom."
+LECTURE_PARTIELLE_PLUSIEURS = (
+    "⚠️ {nombre} médicaments n'ont pas pu être lus : reprenez la photo, ou écrivez ou dites leur nom."
+)
+
+# D13 : après « Corriger ».
+DEMANDE_CORRECTION = "Écrivez ou dites le bon nom."
+
+# D21 : photo illisible (🔊 4).
+PHOTO_ILLISIBLE = (
+    "Je n'arrive pas à lire la photo.\n"
+    "📸 Reprenez-la avec plus de lumière, de plus près, bien à plat,\n"
+    "✍️🎤 ou écrivez ou dites le nom du médicament."
+)
 
 # --- Provisoires, en attendant la construction des parcours ---
 PROVISOIRE_PHOTO = "📸 Photo bien reçue. La recherche par photo arrive très bientôt."
