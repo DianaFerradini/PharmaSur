@@ -168,7 +168,7 @@ def appeler_claude(
 
 
 class AnalyseurClaude:
-    def __init__(self, client: anthropic.Anthropic, modele: str, effort: str = "medium"):
+    def __init__(self, client: anthropic.Anthropic, modele: str, effort: str = "high"):
         self.client = client
         self.modele = modele
         self.effort = effort
