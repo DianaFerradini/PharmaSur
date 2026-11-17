@@ -90,6 +90,8 @@ class FournisseurMeta(Fournisseur):
         self.app_secret = app_secret
         self.api_version = api_version
         self.client = client or httpx.Client(timeout=30)
+        # Identifiants des vocaux déjà téléversés chez Meta (voir `envoyer_audio`).
+        self._medias: dict[tuple[str, int, int], str] = {}
 
     # --- Réception ---
 
@@ -163,8 +165,30 @@ class FournisseurMeta(Fournisseur):
         self._envoyer(destinataire, {"type": "image", "image": image})
 
     def envoyer_audio(self, destinataire: str, chemin_fichier: str) -> None:
-        media_id = self._televerser(Path(chemin_fichier))
+        """Téléverse le vocal chez Meta une seule fois, puis réutilise son identifiant.
+
+        Le cache est lié au fichier (chemin, taille, date de modification) : un vocal
+        réenregistré est téléversé à nouveau. Si Meta refuse un identifiant gardé (il
+        expire au bout de 30 jours), le fichier est téléversé une seconde fois.
+        """
+        chemin = Path(chemin_fichier)
+        cle = self._cle_media(chemin)
+        media_id = self._medias.get(cle)
+        if media_id is not None:
+            try:
+                self._envoyer(destinataire, {"type": "audio", "audio": {"id": media_id}})
+                return
+            except httpx.HTTPStatusError:
+                log.warning("Identifiant du vocal %s refusé : nouveau téléversement", chemin.name)
+                self._medias.pop(cle, None)
+        media_id = self._televerser(chemin)
+        self._medias[cle] = media_id
         self._envoyer(destinataire, {"type": "audio", "audio": {"id": media_id}})
+
+    @staticmethod
+    def _cle_media(chemin: Path) -> tuple[str, int, int]:
+        infos = chemin.stat()
+        return (str(chemin.resolve()), infos.st_size, infos.st_mtime_ns)
 
     def _televerser(self, chemin: Path) -> str:
         type_mime = mimetypes.guess_type(chemin.name)[0] or "audio/ogg"

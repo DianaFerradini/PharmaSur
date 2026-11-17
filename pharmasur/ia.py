@@ -62,7 +62,12 @@ Réponds uniquement avec le JSON demandé :
    - Corrige seulement une faute d'orthographe évidente sur le même nom (« dolipran » devient « Doliprane », « amoxiciline » devient « amoxicilline »).
    - Ne remplace jamais un nom par un autre : pas de marque à la place d'un principe actif, pas de principe actif à la place d'une marque, pas d'équivalent.
    - N'ajoute jamais de médicament, de dosage ou de forme que la personne n'a pas dits.
-   - Laisse de côté les mots qui ne sont pas des médicaments (« je cherche », « pour mon fils », « s'il vous plaît »)."""
+   - Laisse de côté les mots qui ne sont pas des médicaments (« je cherche », « pour mon fils », « s'il vous plaît »).
+   - Dans la transcription d'un vocal, souvent en wolof, les noms de médicaments sont déformés par la reconnaissance (« dolibaran », « amoksisilin sirob ») : rétablis le nom quand il est clairement reconnaissable, et laisse de côté un mot dont tu n'es pas sûr qu'il soit un médicament. La personne vérifie ensuite la liste."""
+
+# Ajouté devant une transcription de vocal (parcours 7), dans le message et non dans le
+# prompt système, pour garder celui-ci identique d'un appel à l'autre (cache).
+INTRO_TRANSCRIPTION = "Transcription automatique d'un vocal (souvent en wolof, avec des erreurs de reconnaissance) :\n"
 
 SCHEMA = {
     "type": "object",
@@ -135,8 +140,9 @@ class AnalyseurClaude:
         self.modele = modele
         self.effort = effort
 
-    def analyser(self, texte: str) -> AnalyseMessage:
-        donnees = appeler_claude(self.client, self.modele, self.effort, 2048, PROMPT_SYSTEME, texte, SCHEMA)
+    def analyser(self, texte: str, transcription: bool = False) -> AnalyseMessage:
+        contenu = INTRO_TRANSCRIPTION + texte if transcription else texte
+        donnees = appeler_claude(self.client, self.modele, self.effort, 2048, PROMPT_SYSTEME, contenu, SCHEMA)
         try:
             categorie = Categorie(donnees["categorie"])
             medicaments = tuple(m.strip() for m in donnees["medicaments"] if m and m.strip())

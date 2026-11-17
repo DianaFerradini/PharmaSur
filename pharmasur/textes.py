@@ -77,6 +77,8 @@ AUCUNE_SOLUTION = "Aucune pharmacie partenaire n'a de solution pour {medicament}
 # D13 : confirmation de lecture.
 LECTURE_INTRO = "J'ai lu sur votre photo :"
 LECTURE_INTRO_CORRIGEE = "Voici votre liste corrigée :"
+# Parcours 7 (D13, 🔊 3) : confirmation des noms compris dans un vocal.
+LECTURE_INTRO_VOCAL = "J'ai compris dans votre vocal :"
 LECTURE_QUESTION = "C'est bien ça ?"
 # D10, D13 : des icônes sans mot, compréhensibles sans savoir lire.
 BOUTON_LECTURE_OUI = "✅"

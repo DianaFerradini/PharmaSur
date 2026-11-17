@@ -14,6 +14,8 @@ from difflib import SequenceMatcher
 from . import db, equivalent, textes
 from .ia import AnalyseurClaude, Categorie, EchecAnalyse, LecteurPhoto, Lisibilite
 from .recherche import Medicament, analyser_medicament, decouper_texte, formater_fiche, normaliser, rechercher
+from .transcription import EchecTranscription, Transcripteur
+from .vocaux import AvecVocaux, BanqueVocaux
 from .whatsapp import Fournisseur, MessageRecu, Option, TypeMessage
 
 log = logging.getLogger(__name__)
@@ -33,14 +35,24 @@ def traiter_message(
     chemin_db: str,
     analyseur: AnalyseurClaude | None = None,
     lecteur: LecteurPhoto | None = None,
+    transcripteur: Transcripteur | None = None,
+    banque: BanqueVocaux | None = None,
 ) -> None:
     connexion = db.connecter(chemin_db)
     try:
+        if banque is not None:
+            # D23 : à une personne qui parle en vocal, le bot répond aussi en vocal (D24).
+            fournisseur = AvecVocaux(fournisseur, banque, lambda numero: db.est_vocal(connexion, numero))
         pharmacie = db.pharmacie_par_numero(connexion, message.expediteur)
         if pharmacie is not None:
             traiter_message_pharmacie(message, pharmacie, fournisseur, connexion)
-        elif analyseur is not None:
-            traiter_message_personne_ia(message, fournisseur, connexion, analyseur, lecteur)
+            return
+        # La forme du message (vocal ou texte) décide de la forme des réponses (D23).
+        # Une photo ou un bouton touché garde la forme précédente.
+        if message.type in (TypeMessage.AUDIO, TypeMessage.TEXTE):
+            db.definir_forme(connexion, message.expediteur, vocal=message.type is TypeMessage.AUDIO)
+        if analyseur is not None:
+            traiter_message_personne_ia(message, fournisseur, connexion, analyseur, lecteur, transcripteur)
         else:
             traiter_message_personne(message, fournisseur, connexion)
     except Exception:
@@ -55,8 +67,9 @@ def traiter_message_personne_ia(
     connexion: sqlite3.Connection,
     analyseur: AnalyseurClaude,
     lecteur: LecteurPhoto | None = None,
+    transcripteur: Transcripteur | None = None,
 ) -> None:
-    """Personne qui cherche, parcours 1 et 6 avec Claude (D8, D9, D12, D13, D21)."""
+    """Personne qui cherche, parcours 1, 6 et 7 avec Claude (D8, D9, D12, D13, D21, D23)."""
     numero = message.expediteur
     if message.type is TypeMessage.IMAGE:
         if lecteur is None or not message.media_id:
@@ -68,7 +81,10 @@ def traiter_message_personne_ia(
         traiter_choix(message, fournisseur, connexion)
         return
     if message.type is TypeMessage.AUDIO:
-        fournisseur.envoyer_texte(numero, textes.PROVISOIRE_VOCAL)
+        if transcripteur is None or not message.media_id:
+            fournisseur.envoyer_texte(numero, textes.PROVISOIRE_VOCAL)
+        else:
+            traiter_vocal(message, fournisseur, connexion, analyseur, transcripteur)
         return
     if message.type is not TypeMessage.TEXTE or not message.texte or not message.texte.strip():
         fournisseur.envoyer_texte(numero, textes.NON_COMPRIS)
@@ -125,6 +141,79 @@ def traiter_message_personne_ia(
         return
 
     # « autre », ou une recherche sans aucun nom exploitable.
+    fournisseur.envoyer_texte(numero, textes.ACCUEIL_COMPLET if premier_contact else textes.NON_COMPRIS)
+
+
+def traiter_vocal(
+    message: MessageRecu,
+    fournisseur: Fournisseur,
+    connexion: sqlite3.Connection,
+    analyseur: AnalyseurClaude,
+    transcripteur: Transcripteur,
+) -> None:
+    """Parcours 7 : transcription du vocal, puis confirmation de lecture à l'oral avant
+    la recherche (D13, D23, D32). Les vocaux de réponse sont ajoutés par `AvecVocaux`."""
+    numero = message.expediteur
+    premier_contact = db.enregistrer_premier_contact(connexion, numero)
+    ancienne = db.lire_lecture(connexion, numero)
+
+    try:
+        audio = fournisseur.telecharger_media(message.media_id)
+    except Exception:
+        log.warning("Téléchargement du vocal impossible : menu « non compris »")
+        fournisseur.envoyer_texte(numero, textes.NON_COMPRIS)
+        return
+    try:
+        transcription = transcripteur.transcrire(audio)
+    except EchecTranscription as e:
+        log.warning("Transcription impossible (%s) : menu « non compris »", e)
+        fournisseur.envoyer_texte(numero, textes.NON_COMPRIS)
+        return
+    finally:
+        del audio  # le vocal n'est ni écrit sur disque ni gardé après la transcription (comme D22)
+
+    # Le texte transcrit dit ce que la personne cherche (données de santé) : jamais dans le journal.
+    log.info("Vocal transcrit (%s caractères)", len(transcription))
+    if not transcription:
+        fournisseur.envoyer_texte(numero, textes.NON_COMPRIS)
+        return
+
+    # Une lecture attend une correction (✏️) ou le nom d'un médicament non lu : le vocal la complète.
+    if ancienne is not None and (ancienne["attend_correction"] or ancienne["non_lus"]):
+        corriger_lecture(numero, transcription, ancienne, fournisseur, connexion, analyseur, transcription=True)
+        return
+
+    try:
+        analyse = analyseur.analyser(transcription, transcription=True)
+    except EchecAnalyse as e:
+        log.warning("Analyse du vocal impossible (%s) : menu « non compris »", e)
+        fournisseur.envoyer_texte(numero, textes.NON_COMPRIS)
+        return
+
+    if analyse.categorie is Categorie.URGENCE:
+        fournisseur.envoyer_texte(numero, textes.URGENCE)
+        return
+
+    noms = [nom for nom in analyse.medicaments if analyser_medicament(nom) is not None]
+    if analyse.categorie is Categorie.RECHERCHE and noms:
+        # La transcription se trompe souvent (D32) : la personne vérifie les noms avant
+        # la recherche, comme pour une photo (D13). L'accueil court part après le ✅.
+        premier = premier_contact or bool(ancienne and ancienne["premier_contact"])
+        db.enregistrer_lecture(connexion, numero, noms, 0, premier)
+        envoyer_confirmation(numero, noms, 0, fournisseur, textes.LECTURE_INTRO_VOCAL)
+        return
+
+    if ancienne is not None:
+        # Tout autre vocal abandonne la lecture en attente.
+        db.supprimer_lecture(connexion, numero)
+    if analyse.categorie is Categorie.HORS_SUJET:
+        if premier_contact:
+            fournisseur.envoyer_texte(numero, textes.ACCUEIL_COMPLET)
+        fournisseur.envoyer_texte(numero, textes.HORS_SUJET)
+        return
+    if analyse.categorie is Categorie.SALUTATION:
+        fournisseur.envoyer_texte(numero, textes.ACCUEIL_COMPLET if premier_contact else textes.SALUTATION_RETOUR)
+        return
     fournisseur.envoyer_texte(numero, textes.ACCUEIL_COMPLET if premier_contact else textes.NON_COMPRIS)
 
 
@@ -228,15 +317,17 @@ def corriger_lecture(
     fournisseur: Fournisseur,
     connexion: sqlite3.Connection,
     analyseur: AnalyseurClaude,
+    transcription: bool = False,
 ) -> None:
-    """Applique la réponse de la personne à la liste lue, puis redemande confirmation (D13).
+    """Applique la réponse de la personne (écrite ou dite) à la liste lue, puis redemande
+    confirmation (D13).
 
     Chaque nom donné remplace le nom lu qui lui ressemble le plus ; seul le couple
     « lu → corrigé » est gardé, sans image ni numéro (D22). Après une lecture partielle,
     un nom qui ne ressemble à aucun nom lu est ajouté : c'est le médicament non lu (D21).
     """
     try:
-        analyse = analyseur.analyser(texte)
+        analyse = analyseur.analyser(texte, transcription=transcription)
     except EchecAnalyse as e:
         log.warning("Analyse de la correction impossible (%s) : menu « non compris »", e)
         fournisseur.envoyer_texte(numero, textes.NON_COMPRIS)

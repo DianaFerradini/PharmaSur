@@ -19,6 +19,8 @@ from .bot import traiter_message
 from .equivalent import traiter_echeances
 from .config import Config, charger_config
 from .ia import creer_analyseur, creer_client, creer_lecteur
+from .transcription import creer_transcripteur
+from .vocaux import AvecVocaux, BanqueVocaux
 from .whatsapp import Fournisseur, MessageRecu
 from .whatsapp.meta import FournisseurMeta
 
@@ -47,15 +49,22 @@ def creer_app(
 ) -> FastAPI:
     config = config or charger_config()
     fournisseur = fournisseur or creer_fournisseur(config)
+    # D24 : les vocaux préenregistrés, envoyés à qui parle au bot en vocal (D23).
+    banque = BanqueVocaux()
     if traitement is traiter_message:
         # Claude comprend les messages et lit les photos si une clé Anthropic est fournie ;
         # sinon, repli provisoire.
         client = creer_client(config)
         analyseur = creer_analyseur(config, client)
         lecteur = creer_lecteur(config, client)
+        transcripteur = creer_transcripteur(config)
         if analyseur is None:
             log.warning("ANTHROPIC_API_KEY est vide : le bot découpe les messages sans IA.")
-        traitement = functools.partial(traiter_message, analyseur=analyseur, lecteur=lecteur)
+        if transcripteur is None:
+            log.warning("ELEVENLABS_API_KEY est vide : les vocaux reçoivent la réponse provisoire.")
+        traitement = functools.partial(
+            traiter_message, analyseur=analyseur, lecteur=lecteur, transcripteur=transcripteur, banque=banque
+        )
 
     @asynccontextmanager
     async def cycle_de_vie(_: FastAPI):
@@ -68,10 +77,20 @@ def creer_app(
         finally:
             boucle.cancel()
 
+    def est_vocal(numero: str) -> bool:
+        connexion = db.connecter(config.db_path)
+        try:
+            return db.est_vocal(connexion, numero)
+        finally:
+            connexion.close()
+
+    # Le message de fin de délai (D17) part aussi en vocal (🔊 9) si la personne parlait en vocal.
+    fournisseur_echeances = AvecVocaux(fournisseur, banque, est_vocal)
+
     async def verifier_echeances() -> None:
         while True:
             try:
-                await asyncio.to_thread(traiter_echeances, config.db_path, fournisseur)
+                await asyncio.to_thread(traiter_echeances, config.db_path, fournisseur_echeances)
             except Exception:
                 log.exception("Vérification des demandes d'équivalent échues impossible")
             await asyncio.sleep(INTERVALLE_ECHEANCES)

@@ -7,7 +7,8 @@ Ce que la base garde (D15) :
 - d'un numéro de personne, seulement le numéro et la date du premier contact ;
 - les recherches, sans aucun lien avec le numéro ;
 - le lien numéro ↔ demande d'équivalent, effacé à la clôture de la demande (D17) ;
-- les corrections de lecture, sans image ni numéro (D22).
+- les corrections de lecture, sans image ni numéro (D22) ;
+- la forme (vocal ou texte) du dernier message d'un numéro, effacée après 24 h (D23).
 """
 
 from __future__ import annotations
@@ -131,6 +132,19 @@ CREATE TABLE IF NOT EXISTS proposition_equivalent (
 );
 """
 DUREE_PROPOSITION = timedelta(hours=24)
+
+# Ajoutée avec le parcours 7 : créée aussi dans une base qui existait déjà.
+SCHEMA_FORME = """
+-- Forme du dernier message de la personne, vocal ou texte (D23), pour répondre dans la
+-- même forme, y compris plus tard (demande d'équivalent). Une ligne par numéro, sans
+-- historique, remplacée à chaque message et effacée après 24 h (D15).
+CREATE TABLE IF NOT EXISTS forme_conversation (
+    numero TEXT PRIMARY KEY,
+    vocal  INTEGER NOT NULL DEFAULT 0,
+    date   TEXT NOT NULL
+);
+"""
+DUREE_FORME = timedelta(hours=24)
 DUREE_DEMANDE = timedelta(hours=23)  # D17
 
 # --- Données simulées (PARCOURS.md, « Données simulées à préparer ») ---
@@ -224,14 +238,14 @@ def initialiser(chemin: str, numero_baobab: str = "", graine: int | None = None)
         connexion = connecter(chemin)
         try:
             with connexion:
-                connexion.executescript(SCHEMA_LECTURE + SCHEMA_EQUIVALENT)  # tables ajoutées depuis la création
+                connexion.executescript(SCHEMA_LECTURE + SCHEMA_EQUIVALENT + SCHEMA_FORME)  # tables ajoutées depuis la création
         finally:
             connexion.close()
         return False
     connexion = connecter(chemin)
     try:
         with connexion:
-            connexion.executescript(SCHEMA + SCHEMA_LECTURE + SCHEMA_EQUIVALENT)
+            connexion.executescript(SCHEMA + SCHEMA_LECTURE + SCHEMA_EQUIVALENT + SCHEMA_FORME)
             remplir(connexion, numero_baobab, random.Random(graine))
     finally:
         connexion.close()
@@ -527,3 +541,26 @@ __all__ = [
     "pharmacie_par_numero",
     "remettre_a_zero",
 ]
+
+
+# --- Forme de la conversation, vocal ou texte (parcours 7, D23) ---
+
+
+def definir_forme(connexion: sqlite3.Connection, numero: str, vocal: bool) -> None:
+    """Retient si le dernier message de la personne était un vocal. Remplace la valeur précédente."""
+    with connexion:
+        limite = (maintenant() - DUREE_FORME).isoformat()
+        connexion.execute("DELETE FROM forme_conversation WHERE date < ?", (limite,))
+        connexion.execute(
+            "INSERT OR REPLACE INTO forme_conversation (numero, vocal, date) VALUES (?, ?, ?)",
+            (normaliser_numero(numero), int(vocal), maintenant().isoformat()),
+        )
+
+
+def est_vocal(connexion: sqlite3.Connection, numero: str) -> bool:
+    """True si le dernier message de ce numéro, depuis moins de 24 h, était un vocal."""
+    limite = (maintenant() - DUREE_FORME).isoformat()
+    ligne = connexion.execute(
+        "SELECT vocal FROM forme_conversation WHERE numero = ? AND date >= ?", (normaliser_numero(numero), limite)
+    ).fetchone()
+    return bool(ligne and ligne["vocal"])
