@@ -118,6 +118,7 @@ Ordre de construction : 1, 6, 2 et 7 pour le quart de finale, puis 3 s'il reste 
 ### D10 — Demande d'équivalent avec l'accord de la personne
 
 - **Décision** : le bot répond tout de suite pour les médicaments trouvés et signale ceux qui sont introuvables. Il propose ensuite d'interroger les pharmacies pour un équivalent, et n'envoie la demande d'équivalent que si la personne est d'accord.
+- **Boutons** : ✅ pour oui et ❌ pour non, sans mot, comme pour la confirmation de lecture (D13). Ainsi ✅ veut toujours dire « oui, c'est bon », et la personne qui ne lit pas peut répondre. La ligne qui signale le médicament introuvable commence par 🚫, pour ne pas ressembler au bouton ❌. Les boutons des pharmacies restent en texte, puisque les pharmaciens lisent.
 
 ### D11 — Le bot ne nomme jamais l'équivalent
 
@@ -173,7 +174,7 @@ Ordre de construction : 1, 6, 2 et 7 pour le quart de finale, puis 3 s'il reste 
 
 - **Décision** : un membre de l'équipe qui parle wolof enregistre un vocal fixe par situation, et le bot envoie le bon enregistrement. Les noms et adresses sont dans la fiche écrite (D23).
 - **Pourquoi** : aucun service en ligne ne fait parler le wolof. Les modèles ouverts demandent un serveur avec carte graphique et leur qualité est inconnue. Une vraie voix, c'est environ une heure de travail et une qualité parfaite.
-- **Pour les personnes qui ne lisent pas** : les vocaux 3 et 5 disent quoi toucher (les boutons ✅ et ✏️, le numéro de téléphone, le lien d'itinéraire), puisque le vocal ne lit pas la fiche écrite (D23).
+- **Pour les personnes qui ne lisent pas** : les vocaux 3, 5 et 6 disent quoi toucher (les boutons ✅, ✏️ et ❌, le numéro de téléphone, le lien d'itinéraire), puisque le vocal ne lit pas la fiche écrite (D23).
 - **Fiche d'enregistrement** : [VOCAUX.md](VOCAUX.md) (consignes, texte de chaque vocal, noms des fichiers).
 - **Vocaux à enregistrer** :
 
@@ -184,7 +185,7 @@ Ordre de construction : 1, 6, 2 et 7 pour le quart de finale, puis 3 s'il reste 
 | 3 | Confirmation de lecture | Voici les médicaments lus, vérifiez-les dans le message écrit ; touchez ✅ si c'est juste, ✏️ pour corriger | D13 |
 | 4 | Photo illisible | Reprenez la photo (plus de lumière, plus près) ou dites le nom du médicament | D21 |
 | 5 | Résultats | Des pharmacies ont vos médicaments, les détails sont écrits ; touchez le numéro pour appeler, le lien pour l'itinéraire ; achetez uniquement en pharmacie, avec votre ordonnance | D7, D8, D23 |
-| 6 | Médicament introuvable | Ce médicament n'est disponible dans aucune pharmacie partenaire ; voulez-vous qu'on demande aux pharmacies si elles ont une solution ? | D10 |
+| 6 | Médicament introuvable | Ce médicament n'est disponible dans aucune pharmacie partenaire ; voulez-vous qu'on demande aux pharmacies si elles ont une solution ? Touchez ✅ pour oui, ❌ pour non | D10 |
 | 7 | Demande d'équivalent envoyée | On a demandé aux pharmacies, on vous prévient dès qu'une a une solution | D10, D17 |
 | 8 | Une pharmacie a une solution | Une pharmacie a peut-être une solution, son nom est écrit ; allez demander conseil au pharmacien | D11 |
 | 9 | Aucune solution après 23 h | Aucune pharmacie partenaire n'a de solution ; demandez conseil à un pharmacien | D17 |

@@ -11,7 +11,7 @@ Les textes des messages sont des propositions. On peut les retoucher pendant la 
   - 💊 **Pharmacie Baobab**, jouée en direct par un membre de l'équipe. Son numéro est inscrit comme pharmacie partenaire (D4).
 - 🤖 **PharmaSûr** : un seul numéro WhatsApp pour tout le monde (D4).
 - 🔊 **n** : le vocal préenregistré n° n de la liste D24, envoyé quand la personne parle en vocal.
-- `[Oui]  [Non]` : des boutons de réponse WhatsApp. La confirmation de lecture utilise toujours `[✅]  [✏️]` (D13).
+- `[Oui]  [Non]` : des boutons de réponse WhatsApp. Ceux de la personne qui cherche sont des icônes : `[✅]  [✏️]` pour la confirmation de lecture (D13), `[✅]  [❌]` pour accepter ou refuser la demande d'équivalent (D10).
 
 ### Données simulées à préparer
 
@@ -105,12 +105,12 @@ Les textes des messages sont des propositions. On peut les retoucher pendant la 
 3. 🤖 Puis il envoie un second message (D10, 🔊 6) :
 
    ```text
-   ❌ Smecta : introuvable aujourd'hui dans les pharmacies partenaires.
+   🚫 Smecta : introuvable aujourd'hui dans les pharmacies partenaires.
    Voulez-vous qu'on demande aux pharmacies si l'une d'elles a une solution ?
-   [Oui]  [Non]
+   [✅]  [❌]
    ```
 
-4. 👤 Fatou touche **Oui**.
+4. 👤 Fatou touche ✅.
 5. 🤖 Le bot confirme l'envoi (🔊 7) :
 
    ```text
@@ -153,7 +153,7 @@ Les textes des messages sont des propositions. On peut les retoucher pendant la 
   Aucune pharmacie partenaire n'a de solution pour le Smecta. Demandez conseil à un pharmacien.
   ```
 
-- Si Fatou touche **Non**, rien n'est envoyé aux pharmacies.
+- Si Fatou touche ❌, rien n'est envoyé aux pharmacies.
 - Quand la demande est close, le lien entre le numéro de Fatou et la demande est effacé (D15).
 
 ---
