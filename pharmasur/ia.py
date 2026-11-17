@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import base64
 import json
+import re
 import logging
 from dataclasses import dataclass
 from enum import StrEnum
@@ -50,7 +51,7 @@ Réponds uniquement avec le JSON demandé :
 
 1. "categorie", une seule valeur :
    - "urgence" : la personne décrit une urgence médicale en cours (malaise grave, perte de connaissance, difficulté à respirer, saignement important, convulsions, intoxication ou médicaments avalés par erreur, douleur très forte soudaine). En cas de doute sur une urgence, choisis "urgence".
-   - "recherche" : la personne cherche au moins un médicament, même au milieu d'une salutation (« Bonjour, je cherche du Doliprane »).
+   - "recherche" : la personne cherche au moins un médicament, même au milieu d'une salutation (« Bonjour, je cherche du Doliprane »). Un message court qui ne contient qu'un ou quelques noms de produits est une recherche, même si tu ne connais pas ces produits (« Mag 2 », « Richifer », « mag 2 svp ») : beaucoup de médicaments vendus au Sénégal te sont inconnus. Entre "autre" et "recherche", choisis "recherche".
    - "salutation" : seulement une salutation ou une prise de contact, sans médicament (« Bonjour », « Salam », « Na nga def »).
    - "hors_sujet" : toute autre demande que trouver un médicament : conseil de santé, posologie, prix, commande ou livraison, question sur un médecin, conversation.
    - "autre" : message incompréhensible ou vide de sens.
@@ -64,6 +65,37 @@ Réponds uniquement avec le JSON demandé :
    - N'ajoute jamais de médicament, de dosage ou de forme que la personne n'a pas dits.
    - Laisse de côté les mots qui ne sont pas des médicaments (« je cherche », « pour mon fils », « s'il vous plaît »).
    - Dans la transcription d'un vocal, souvent en wolof, les noms de médicaments sont déformés par la reconnaissance (« dolibaran », « amoksisilin sirob ») : rétablis le nom quand il est clairement reconnaissable, et laisse de côté un mot dont tu n'es pas sûr qu'il soit un médicament. La personne vérifie ensuite la liste."""
+
+def _nom_seul(libelle: str) -> str:
+    """Le nom d'un produit, sans dosage ni forme (« Mag 2 100 mg comprimés » donne « Mag 2 »),
+    pour que la liste aide à reconnaître un nom sans pousser à ajouter un dosage (D27)."""
+    nom = re.sub(r"\s+\d+([.,]\d+)?\s*(mg|g|ml|%|µg)(\W.*)?$", "", libelle, flags=re.IGNORECASE)
+    return re.sub(r"(\s+(comprimés?|gélules?|sirop|effervescents?))+$", "", nom, flags=re.IGNORECASE).strip()
+
+
+def _noms_connus() -> str:
+    """Les produits des catalogues simulés, pour aider à reconnaître un nom mal écrit ou mal lu.
+
+    Pris dans les données fixes (et non dans la base) pour que le prompt reste identique
+    d'un appel à l'autre (cache).
+    """
+    from .db import PHARMACIES_SIMULEES
+
+    # L'UPSA-C est la solution de Baobab pour la vitamine C de l'ordonnance de test : il ne
+    # figure pas ici, pour que la lecture ne le substitue jamais au nom prescrit (D11).
+    noms = sorted({_nom_seul(libelle) for p in PHARMACIES_SIMULEES for libelle in p["catalogue"] if not libelle.startswith("UPSA")})
+    return chr(10).join(f"- {nom}" for nom in noms)
+
+
+NOMS_CONNUS = """
+
+Produits connus de PharmaSûr (catalogues des pharmacies partenaires) :
+""" + _noms_connus() + """
+
+Si un nom écrit, lu ou entendu ressemble clairement à l'un de ces produits (une ou deux lettres de différence, une espace ou un trait d'union en plus ou en moins, comme « Richifen » pour « Richifer » ou « Mag2 » pour « Mag 2 »), écris-le comme dans cette liste, sans y ajouter le dosage ni la forme s'ils n'ont pas été donnés. Ne choisis jamais dans cette liste un produit différent : un autre nom, même au même principe actif, reste un autre médicament. Un médicament absent de cette liste reste un médicament valide : recopie-le tel quel."""
+
+PROMPT_SYSTEME = PROMPT_SYSTEME + NOMS_CONNUS
+
 
 # Ajouté devant une transcription de vocal (parcours 7), dans le message et non dans le
 # prompt système, pour garder celui-ci identique d'un appel à l'autre (cache).
@@ -189,6 +221,8 @@ Réponds uniquement avec le JSON demandé :
    - "illisible" : aucun médicament lu (photo floue, trop sombre, trop loin, ou qui ne montre ni ordonnance ni boîte de médicament). La liste est alors vide.
 
 Si la personne a écrit une légende avec la photo, elle est donnée après l'image. Ajoute à la liste les médicaments qu'elle y nomme, avec les mêmes règles, et ignore le reste de la légende."""
+
+PROMPT_PHOTO = PROMPT_PHOTO + NOMS_CONNUS
 
 SCHEMA_PHOTO = {
     "type": "object",
