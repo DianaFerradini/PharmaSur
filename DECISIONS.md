@@ -144,6 +144,12 @@ Ordre de construction : 1, 6, 2 et 7 pour le quart de finale, puis 3 s'il reste 
 - **Pourquoi** : la personne ne perd jamais une réponse qui aurait pu arriver, et le bot ne lui pose pas de question de plus.
 - **Écarté** : clore l'ancienne demande à chaque nouvelle recherche (la personne perd sans le savoir une réponse possible) et demander à la personne si elle garde la demande (une question de plus).
 
+### D41 — Un « Oui » après les 23 heures reçoit seulement une réponse à la pharmacie
+
+- **Décision** : si une pharmacie touche « Oui » sur une demande d'équivalent déjà close, le bot lui répond : « Merci, cette demande est close. La personne a été orientée vers un pharmacien. » La personne n'est pas prévenue.
+- **Pourquoi** : le lien entre son numéro et la demande est effacé à la clôture (D15), et WhatsApp n'autorise plus un message libre plus de 24 heures après son dernier message. Le pharmacien sait que son geste est arrivé, sans être laissé sans réponse.
+- **Écarté** : prévenir quand même la personne quand WhatsApp le permet encore (il faudrait garder le lien numéro-demande au-delà de la clôture, contre D15) et ignorer le « Oui » sans rien répondre (le pharmacien croit avoir aidé).
+
 ## Photo (parcours 6)
 
 ### D12 — La photo d'ordonnance est acceptée
@@ -356,7 +362,6 @@ _D34 à D38 sont des choix purement techniques, que l'agent a tranchés à la de
 
 Aucune pour les parcours. Ces points restent à régler pendant l'implémentation :
 
-- ce que fait le bot si une pharmacie touche « Oui » après les 23 heures ;
 - le contenu exact de la page de présentation et du tableau de bord (D26) ;
 - l'option « introuvables partout » dans le résumé.
 
