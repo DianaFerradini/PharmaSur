@@ -11,7 +11,7 @@ Les textes des messages sont des propositions. On peut les retoucher pendant la 
   - 💊 **Pharmacie Baobab**, jouée en direct par un membre de l'équipe. Son numéro est inscrit comme pharmacie partenaire (D4).
 - 🤖 **PharmaSûr** : un seul numéro WhatsApp pour tout le monde (D4).
 - 🔊 **n** : le vocal préenregistré n° n de la liste D24, envoyé quand la personne parle en vocal.
-- `[Oui]  [Non]` : des boutons de réponse WhatsApp.
+- `[Oui]  [Non]` : des boutons de réponse WhatsApp. La confirmation de lecture utilise toujours `[✅]  [✏️]` (D13).
 
 ### Données simulées à préparer
 
@@ -264,17 +264,17 @@ L'option qui ajouterait une ligne « introuvables chez toutes les pharmacies par
    2. Doliprane 2,4 % sirop
    3. Smecta
    C'est bien ça ?
-   [Oui]  [Corriger]
+   [✅]  [✏️]
    ```
 
-3. 👤 Fatou touche **Oui**. L'image est supprimée (D22), puis la recherche continue :
+3. 👤 Fatou touche ✅. L'image est supprimée (D22), puis la recherche continue :
    - Baobab a 2 médicaments sur 3 et Liberté 1 sur 3.
    - Teranga n'apparaît pas : la forme « sirop » est précisée, et elle n'a que des comprimés (D27).
    - Le Smecta est introuvable, donc la suite est celle du parcours 2.
 
 **Variantes** :
 
-- **Corriger** : le bot demande le bon nom.
+- **Corriger** (✏️) : le bot demande le bon nom.
 
   ```text
   Écrivez ou dites le bon nom.

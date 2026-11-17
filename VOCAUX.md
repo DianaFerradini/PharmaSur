@@ -124,7 +124,7 @@ Ne dites pas le numéro dans le vocal lui-même : la personne qui recevra le voc
 
 Le bot affiche aussi des boutons sous certains messages. Dites à l'équipe si une personne qui ne lit pas le français les comprendra :
 
-- **✅ et ✏️** : valider ou corriger la liste des médicaments compris (vocal 3, parcours 7).
+- **✅ et ✏️** : valider ou corriger la liste des médicaments compris (vocal 3). Ce sont les mêmes boutons pour tout le monde, à l'écrit comme à l'oral (D13).
 - **Oui et Non** : accepter ou refuser qu'on interroge les pharmacies (vocal 6).
 
 Si un mot wolof serait plus clair, proposez-le. Le vocal 3 parle de la coche et du crayon : si vous pensez qu'ils ne seront pas compris, dites-le avant d'enregistrer ce vocal.

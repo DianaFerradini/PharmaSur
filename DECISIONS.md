@@ -148,6 +148,7 @@ Ordre de construction : 1, 6, 2 et 7 pour le quart de finale, puis 3 s'il reste 
 
 - **Décision** : avant la recherche, la personne valide ou corrige les noms lus sur sa photo. La confirmation se fait à l'écrit si elle écrit, à l'oral si elle parle.
 - **À l'oral** : le bot envoie un vocal fixe (« vérifiez les noms écrits ») avec la liste écrite des noms lus, puisque le vocal ne prononce aucun nom (D23, D24).
+- **Boutons** : toujours ✅ pour valider et ✏️ pour corriger, que la personne écrive en français ou parle en wolof. Les mêmes boutons partout, c'est un seul message de confirmation à construire, et des icônes compréhensibles sans savoir lire. Le vocal 3 peut donc les citer (D24).
 
 ### D21 — Photo illisible : reprendre la photo ou donner le nom
 
