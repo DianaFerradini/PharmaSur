@@ -128,21 +128,30 @@ PHARMACIES_SIMULEES = [
         "adresse": "Rue 10, Grand Yoff",
         "telephone": "+221 33 000 00 01",
         "numero_whatsapp": None,  # vrai numéro, lu dans NUMERO_PHARMACIE_BAOBAB
-        "catalogue": ["Amoxicilline 250 mg/5 ml sirop", "Doliprane 2,4 % sirop", "Doliprane 1000 mg comprimés"],
+        "catalogue": [
+            "Amoxicilline 250 mg/5 ml sirop",
+            "Doliprane 2,4 % sirop",
+            "Doliprane 1000 mg comprimés",
+            # Ordonnance de test : Richifer et Mag 2 disponibles ; UPSA-C est la solution
+            # que Baobab a pour la vitamine C prescrite, introuvable (parcours 2, D11).
+            "Richifer gélules",
+            "Mag 2 100 mg comprimés",
+            "UPSA-C 1000 mg comprimés effervescents",
+        ],
     },
     {
         "nom": "Pharmacie Liberté",
         "adresse": "Liberté 6, Dakar",
         "telephone": "+221 33 000 00 02",
         "numero_whatsapp": "221330000002",
-        "catalogue": ["Amoxicilline 250 mg/5 ml sirop", "Amoxicilline 500 mg gélules"],
+        "catalogue": ["Amoxicilline 250 mg/5 ml sirop", "Amoxicilline 500 mg gélules", "Mag 2 100 mg comprimés"],
     },
     {
         "nom": "Pharmacie Teranga",
         "adresse": "Avenue Cheikh Anta Diop, Fann",
         "telephone": "+221 33 000 00 03",
         "numero_whatsapp": "221330000003",
-        "catalogue": ["Doliprane 1000 mg comprimés", "Efferalgan 500 mg"],
+        "catalogue": ["Doliprane 1000 mg comprimés", "Efferalgan 500 mg", "Richifer gélules"],
     },
     {
         "nom": "Pharmacie Jamm",

@@ -17,12 +17,17 @@ Les textes des messages sont des propositions. On peut les retoucher pendant la 
 
 | Pharmacie partenaire | Catalogue de départ | Rôle dans la démo |
 |---|---|---|
-| Pharmacie Baobab (jouée en direct) | Amoxicilline 250 mg/5 ml sirop, Doliprane 2,4 % sirop, Doliprane 1000 mg comprimés | Rupture, retour en stock, demande d'équivalent, résumé |
-| Pharmacie Liberté | Amoxicilline 250 mg/5 ml sirop, Amoxicilline 500 mg gélules | Ex æquo avec Teranga (D25) ; trouvée par principe actif (D28) |
-| Pharmacie Teranga | Doliprane 1000 mg comprimés, Efferalgan 500 mg | L'Efferalgan n'est pas compté pour « Doliprane » (D27) |
+| Pharmacie Baobab (jouée en direct) | Amoxicilline 250 mg/5 ml sirop, Doliprane 2,4 % sirop, Doliprane 1000 mg comprimés, Richifer gélules, Mag 2 100 mg comprimés, UPSA-C 1000 mg comprimés effervescents | Rupture, retour en stock, demande d'équivalent, résumé |
+| Pharmacie Liberté | Amoxicilline 250 mg/5 ml sirop, Amoxicilline 500 mg gélules, Mag 2 100 mg comprimés | Ex æquo avec Teranga (D25) ; trouvée par principe actif (D28) |
+| Pharmacie Teranga | Doliprane 1000 mg comprimés, Efferalgan 500 mg, Richifer gélules | L'Efferalgan n'est pas compté pour « Doliprane » (D27) |
 | Pharmacie Jamm | Clamoxyl 500 mg | Le Clamoxyl n'est pas compté pour « amoxicilline » (D28) |
 
 - Le **Smecta** n'est dans aucun catalogue : il est introuvable (parcours 2).
+- **Ordonnance de test** (une vraie ordonnance manuscrite, dont la photo sert pour toute la démo) : Richifer, une vitamine C, Mag 2.
+  - Richifer gélules : Baobab et Teranga. Mag 2 100 mg comprimés : Baobab et Liberté. Baobab arrive donc en tête avec 2 sur 3 (D25).
+  - La vitamine C prescrite (lue « Adnovit C ») n'est dans aucun catalogue : elle est introuvable et lance la demande d'équivalent (parcours 2).
+  - Baobab a l'UPSA-C 1000 mg : c'est sa solution, qu'il touche « Oui » ; le bot ne la nomme jamais (D11).
+  - À la lecture de la photo, le bot lit Richifer et Adnovit C mais pas Mag 2 : la démo montre alors la lecture partielle (D21), où Fatou écrit « Mag 2 ». Une photo plus nette peut suffire à tout lire.
 - La **Ventoline** n'est pas dans le catalogue de Baobab : elle sert pour le cas hors catalogue (parcours 3).
 - Quelques dizaines de **recherches simulées** sont à préremplir, pour avoir des chiffres crédibles dans le résumé (D14) et le tableau de bord (D26).
 - Les **12 vocaux** de D24 sont à faire enregistrer par la personne de l'équipe qui parle wolof, avec la fiche [VOCAUX.md](VOCAUX.md).
