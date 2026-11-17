@@ -181,9 +181,10 @@ def test_routage_personne_premier_contact_puis_resultats(config):
     # Deuxième message : plus d'accueil.
     fournisseur.envois.clear()
     traiter_message(MessageRecu(NUMERO_FATOU, TypeMessage.TEXTE, texte="smecta"), fournisseur, config.db_path)
-    assert [envoi[1] for envoi in fournisseur.envois] == [
-        "🚫 Smecta : introuvable aujourd'hui dans les pharmacies partenaires."
-    ]
+    # D10 : la ligne 🚫 et la proposition de demande d'équivalent, avec ✅ / ❌.
+    ((destinataire, texte, options),) = fournisseur.envois
+    assert texte == "🚫 Smecta : introuvable aujourd'hui dans les pharmacies partenaires.\nVoulez-vous qu'on demande aux pharmacies si l'une d'elles a une solution ?"
+    assert [o.libelle for o in options] == ["✅", "❌"]
 
 
 def test_routage_pharmacie_reconnue_a_son_numero(config):

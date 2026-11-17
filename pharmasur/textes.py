@@ -36,14 +36,51 @@ URGENCE = "🚨 Urgence : appelez le SAMU au 1515 ou les sapeurs-pompiers au 18.
 # D5, D10 : première ligne du message sur un médicament introuvable (parcours 2).
 INTROUVABLE = "🚫 {medicament} : introuvable aujourd'hui dans les pharmacies partenaires."
 
+# --- Parcours 2 : demande d'équivalent ---
+
+# D10 (🔊 6) : proposition, après les lignes 🚫 des introuvables.
+PROPOSITION_EQUIVALENT = "Voulez-vous qu'on demande aux pharmacies si l'une d'elles a une solution ?"
+BOUTON_EQUIVALENT_OUI = "✅"
+BOUTON_EQUIVALENT_NON = "❌"
+
+# D10 (🔊 7) : la personne a touché ✅.
+EQUIVALENT_ENVOYE = "C'est envoyé ✅ Je vous préviens dès qu'une pharmacie a une solution."
+# La personne a touché ❌ : rien n'est envoyé aux pharmacies.
+EQUIVALENT_REFUSE = "D'accord 👍 Rien n'est envoyé aux pharmacies."
+
+# D16 : demande d'équivalent reçue par les pharmacies. Rien sur la personne (D15).
+DEMANDE_PHARMACIE = (
+    "🔎 Une personne cherche : {medicament}.\n"
+    "Introuvable aujourd'hui dans le réseau. Avez-vous une solution ?"
+)
+# Boutons en texte (D10) ; 20 caractères au plus chez Meta.
+BOUTON_PHARMACIE_OUI = "J'ai une solution"
+BOUTON_PHARMACIE_NON = "Non"
+MERCI_PHARMACIE_OUI = "Merci ✅ La personne va être prévenue."
+MERCI_PHARMACIE_NON = "Merci, c'est noté."
+# D41 : « Oui » sur une demande close.
+DEMANDE_CLOSE_PHARMACIE = "Merci, cette demande est close. La personne a été orientée vers un pharmacien."
+
+# D11, D17 (🔊 8) : une pharmacie a peut-être une solution. Jamais le nom du produit.
+SOLUTION_TROUVEE = (
+    "💡 La {pharmacie} a peut-être une solution pour {medicament}.\n"
+    "Allez demander conseil au pharmacien.\n"
+    "📍 {adresse}\n"
+    "📞 {telephone}\n"
+    "🗺️ {lien}"
+)
+# D17 (🔊 9) : aucune pharmacie n'a dit oui en 23 heures.
+AUCUNE_SOLUTION = "Aucune pharmacie partenaire n'a de solution pour {medicament}. Demandez conseil à un pharmacien."
+
 # --- Parcours 6 : recherche par photo ---
 
 # D13 : confirmation de lecture.
 LECTURE_INTRO = "J'ai lu sur votre photo :"
 LECTURE_INTRO_CORRIGEE = "Voici votre liste corrigée :"
 LECTURE_QUESTION = "C'est bien ça ?"
-BOUTON_LECTURE_OUI = "✅ Oui"
-BOUTON_LECTURE_CORRIGER = "✏️ Corriger"
+# D10, D13 : des icônes sans mot, compréhensibles sans savoir lire.
+BOUTON_LECTURE_OUI = "✅"
+BOUTON_LECTURE_CORRIGER = "✏️"
 
 # D21 : lecture partielle, ajoutée sous les noms lus.
 LECTURE_PARTIELLE_UN = "⚠️ Un médicament n'a pas pu être lu : reprenez la photo, ou écrivez ou dites son nom."

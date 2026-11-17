@@ -167,7 +167,7 @@ def test_photo_lisible_confirmation_puis_resultats(chemin_db):
     assert "1. Pharmacie Baobab — 2 sur 3" in textes[1]
     assert "Pharmacie Liberté — 1 sur 3" in textes[1]
     assert "Teranga" not in textes[1]  # la forme « sirop » est précisée (D27)
-    assert textes[2] == "🚫 Smecta : introuvable aujourd'hui dans les pharmacies partenaires."
+    assert textes[2] == "🚫 Smecta : introuvable aujourd'hui dans les pharmacies partenaires.\nVoulez-vous qu'on demande aux pharmacies si l'une d'elles a une solution ?"
     # D22 : le lien entre le numéro et les noms lus est effacé dès la confirmation.
     assert lecture_en_attente(chemin_db) is None
     assert corrections(chemin_db) == []

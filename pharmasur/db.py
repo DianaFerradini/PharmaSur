@@ -119,6 +119,20 @@ CREATE TABLE IF NOT EXISTS lecture_en_attente (
 """
 DUREE_LECTURE_EN_ATTENTE = timedelta(hours=24)
 
+# Ajoutée avec le parcours 2 : créée aussi dans une base qui existait déjà.
+SCHEMA_EQUIVALENT = """
+-- Proposition de demande d'équivalent (D10) en attente de ✅ ou ❌. Seulement les noms
+-- introuvables ; supprimée dès la réponse, et au plus tard après 24 h (D15).
+CREATE TABLE IF NOT EXISTS proposition_equivalent (
+    id          INTEGER PRIMARY KEY,
+    numero      TEXT NOT NULL,
+    medicaments TEXT NOT NULL,                  -- liste JSON des médicaments introuvables
+    cree_le     TEXT NOT NULL
+);
+"""
+DUREE_PROPOSITION = timedelta(hours=24)
+DUREE_DEMANDE = timedelta(hours=23)  # D17
+
 # --- Données simulées (PARCOURS.md, « Données simulées à préparer ») ---
 # Les noms, adresses et numéros sont fictifs, à remplacer.
 
@@ -162,6 +176,11 @@ PHARMACIES_SIMULEES = [
     },
 ]
 NUMERO_BAOBAB_FICTIF = "221330000001"
+# Numéros inventés : Meta refuserait d'y envoyer un message (seuls 5 numéros réels sont
+# autorisés avec le numéro de test, D29). Les demandes d'équivalent les sautent.
+NUMEROS_FICTIFS = frozenset(
+    [p["numero_whatsapp"] for p in PHARMACIES_SIMULEES if p["numero_whatsapp"]] + [NUMERO_BAOBAB_FICTIF]
+)
 
 # Recherches simulées (D14) : (nombre de recherches, médicaments). Smecta et Spasfon
 # ne sont dans aucun catalogue : ils alimentent la demande manquée du résumé.
@@ -205,14 +224,14 @@ def initialiser(chemin: str, numero_baobab: str = "", graine: int | None = None)
         connexion = connecter(chemin)
         try:
             with connexion:
-                connexion.executescript(SCHEMA_LECTURE)  # tables ajoutées depuis la création
+                connexion.executescript(SCHEMA_LECTURE + SCHEMA_EQUIVALENT)  # tables ajoutées depuis la création
         finally:
             connexion.close()
         return False
     connexion = connecter(chemin)
     try:
         with connexion:
-            connexion.executescript(SCHEMA + SCHEMA_LECTURE)
+            connexion.executescript(SCHEMA + SCHEMA_LECTURE + SCHEMA_EQUIVALENT)
             remplir(connexion, numero_baobab, random.Random(graine))
     finally:
         connexion.close()
@@ -400,6 +419,101 @@ def enregistrer_correction(connexion: sqlite3.Connection, lu: str, corrige: str)
         connexion.execute(
             "INSERT INTO correction_lecture (lu, corrige, date) VALUES (?, ?, ?)", (lu, corrige, maintenant().isoformat())
         )
+
+
+# --- Demande d'équivalent (parcours 2, D10, D15, D16, D17, D36, D40, D41) ---
+
+
+def _instant(instant: datetime | None) -> datetime:
+    return instant or maintenant()
+
+
+def creer_proposition(
+    connexion: sqlite3.Connection, numero: str, medicaments: list[str], instant: datetime | None = None
+) -> int:
+    """Garde les médicaments introuvables en attendant ✅ ou ❌ (D10)."""
+    instant = _instant(instant)
+    with connexion:
+        limite = (instant - DUREE_PROPOSITION).isoformat()
+        connexion.execute("DELETE FROM proposition_equivalent WHERE cree_le < ?", (limite,))
+        return connexion.execute(
+            "INSERT INTO proposition_equivalent (numero, medicaments, cree_le) VALUES (?, ?, ?)",
+            (normaliser_numero(numero), json.dumps(medicaments), instant.isoformat()),
+        ).lastrowid
+
+
+def prendre_proposition(connexion: sqlite3.Connection, proposition_id: int, numero: str) -> list[str] | None:
+    """Renvoie les médicaments de la proposition et l'efface (D15). None si elle n'existe plus."""
+    with connexion:
+        ligne = connexion.execute(
+            "SELECT medicaments FROM proposition_equivalent WHERE id = ? AND numero = ?",
+            (proposition_id, normaliser_numero(numero)),
+        ).fetchone()
+        if ligne is None:
+            return None
+        connexion.execute("DELETE FROM proposition_equivalent WHERE id = ?", (proposition_id,))
+    return json.loads(ligne["medicaments"])
+
+
+def creer_demande(
+    connexion: sqlite3.Connection, medicament: str, numero: str, instant: datetime | None = None
+) -> int:
+    """Ouvre une demande d'équivalent pour 23 heures (D17). Plusieurs par numéro (D40)."""
+    instant = _instant(instant)
+    with connexion:
+        return connexion.execute(
+            "INSERT INTO demande_equivalent (medicament, numero, cree_le, fin_le) VALUES (?, ?, ?, ?)",
+            (medicament, normaliser_numero(numero), instant.isoformat(), (instant + DUREE_DEMANDE).isoformat()),
+        ).lastrowid
+
+
+def lire_demande(connexion: sqlite3.Connection, demande_id: int) -> sqlite3.Row | None:
+    return connexion.execute("SELECT * FROM demande_equivalent WHERE id = ?", (demande_id,)).fetchone()
+
+
+def demande_ouverte(demande: sqlite3.Row, instant: datetime | None = None) -> bool:
+    return not demande["close"] and demande["fin_le"] > _instant(instant).isoformat()
+
+
+def pharmacies_joignables(connexion: sqlite3.Connection) -> list[sqlite3.Row]:
+    """Les pharmacies partenaires à qui le bot peut vraiment écrire (numéro non fictif)."""
+    return [
+        ligne
+        for ligne in connexion.execute("SELECT * FROM pharmacie ORDER BY id")
+        if ligne["numero_whatsapp"] not in NUMEROS_FICTIFS
+    ]
+
+
+def enregistrer_oui(
+    connexion: sqlite3.Connection, demande_id: int, pharmacie_id: int, instant: datetime | None = None
+) -> bool:
+    """Garde le « Oui » d'une pharmacie (D16). Renvoie False si elle l'avait déjà dit."""
+    with connexion:
+        curseur = connexion.execute(
+            "INSERT OR IGNORE INTO reponse_equivalent (demande_id, pharmacie_id, date) VALUES (?, ?, ?)",
+            (demande_id, pharmacie_id, _instant(instant).isoformat()),
+        )
+    return curseur.rowcount == 1
+
+
+def nombre_de_oui(connexion: sqlite3.Connection, demande_id: int) -> int:
+    return connexion.execute(
+        "SELECT COUNT(*) FROM reponse_equivalent WHERE demande_id = ?", (demande_id,)
+    ).fetchone()[0]
+
+
+def demandes_echues(connexion: sqlite3.Connection, instant: datetime | None = None) -> list[sqlite3.Row]:
+    """Demandes encore ouvertes dont les 23 heures sont écoulées (D36)."""
+    return connexion.execute(
+        "SELECT * FROM demande_equivalent WHERE close = 0 AND fin_le <= ? ORDER BY id",
+        (_instant(instant).isoformat(),),
+    ).fetchall()
+
+
+def clore_demande(connexion: sqlite3.Connection, demande_id: int) -> None:
+    """Clôt la demande et efface le lien avec le numéro de la personne (D15)."""
+    with connexion:
+        connexion.execute("UPDATE demande_equivalent SET close = 1, numero = NULL WHERE id = ?", (demande_id,))
 
 
 __all__ = [

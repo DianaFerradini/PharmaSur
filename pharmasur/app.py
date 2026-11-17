@@ -5,6 +5,7 @@ Lancer en local : uvicorn pharmasur.app:app --reload --port 8000
 
 from __future__ import annotations
 
+import asyncio
 import functools
 import logging
 from contextlib import asynccontextmanager
@@ -15,6 +16,7 @@ from fastapi.responses import PlainTextResponse
 
 from . import db
 from .bot import traiter_message
+from .equivalent import traiter_echeances
 from .config import Config, charger_config
 from .ia import creer_analyseur, creer_client, creer_lecteur
 from .whatsapp import Fournisseur, MessageRecu
@@ -24,6 +26,8 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name
 log = logging.getLogger(__name__)
 
 Traitement = Callable[[MessageRecu, Fournisseur, str], None]
+
+INTERVALLE_ECHEANCES = 60  # secondes (D36)
 
 
 def creer_fournisseur(config: Config) -> Fournisseur:
@@ -57,7 +61,20 @@ def creer_app(
     async def cycle_de_vie(_: FastAPI):
         # D35 : la base est créée avec les données simulées si elle n'existe pas.
         db.initialiser(config.db_path, config.numero_pharmacie_baobab)
-        yield
+        # D36 : les demandes d'équivalent échues sont closes, vérification chaque minute.
+        boucle = asyncio.create_task(verifier_echeances())
+        try:
+            yield
+        finally:
+            boucle.cancel()
+
+    async def verifier_echeances() -> None:
+        while True:
+            try:
+                await asyncio.to_thread(traiter_echeances, config.db_path, fournisseur)
+            except Exception:
+                log.exception("Vérification des demandes d'équivalent échues impossible")
+            await asyncio.sleep(INTERVALLE_ECHEANCES)
 
     app = FastAPI(title="PharmaSûr", lifespan=cycle_de_vie)
 

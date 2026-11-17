@@ -11,7 +11,7 @@ import logging
 import sqlite3
 from difflib import SequenceMatcher
 
-from . import db, textes
+from . import db, equivalent, textes
 from .ia import AnalyseurClaude, Categorie, EchecAnalyse, LecteurPhoto, Lisibilite
 from .recherche import Medicament, analyser_medicament, decouper_texte, formater_fiche, normaliser, rechercher
 from .whatsapp import Fournisseur, MessageRecu, Option, TypeMessage
@@ -184,8 +184,12 @@ def envoyer_confirmation(
 
 
 def traiter_choix(message: MessageRecu, fournisseur: Fournisseur, connexion: sqlite3.Connection) -> None:
-    """La personne a touché un bouton. Pour l'instant : la confirmation de lecture (D13)."""
+    """La personne a touché un bouton : ✅ / ❌ d'une proposition de demande d'équivalent
+    (D10), ou la confirmation de lecture (D13)."""
     numero = message.expediteur
+    if equivalent.est_choix_personne(message.choix_id):
+        equivalent.repondre_proposition(message, fournisseur, connexion)
+        return
     lecture = db.lire_lecture(connexion, numero)
     if lecture is None:
         # Bouton d'une lecture déjà confirmée ou expirée.
@@ -274,15 +278,14 @@ def corriger_lecture(
 def envoyer_resultats(
     numero: str, demandes: list[Medicament], fournisseur: Fournisseur, connexion: sqlite3.Connection
 ) -> None:
-    """Fiche résultat (D7) puis les introuvables (D5)."""
+    """Fiche résultat (D7), puis les introuvables (D5) avec la proposition de demande
+    d'équivalent (D10)."""
     resultat = rechercher(demandes, db.charger_pharmacies(connexion))
     db.enregistrer_recherche(connexion, resultat)
     fiche = formater_fiche(resultat)
     if fiche:
         fournisseur.envoyer_texte(numero, fiche)
-    for introuvable in resultat.introuvables:
-        # Provisoire : la proposition de demande d'équivalent arrive avec le parcours 2.
-        fournisseur.envoyer_texte(numero, textes.INTROUVABLE.format(medicament=introuvable.libelle))
+    equivalent.proposer(numero, list(resultat.introuvables), fournisseur, connexion)
 
 
 def traiter_message_personne(message: MessageRecu, fournisseur: Fournisseur, connexion: sqlite3.Connection) -> None:
@@ -294,6 +297,9 @@ def traiter_message_personne(message: MessageRecu, fournisseur: Fournisseur, con
         return
     if message.type is TypeMessage.AUDIO:
         fournisseur.envoyer_texte(numero, textes.PROVISOIRE_VOCAL)
+        return
+    if message.type is TypeMessage.CHOIX:
+        traiter_choix(message, fournisseur, connexion)
         return
     if message.type is not TypeMessage.TEXTE or not message.texte:
         fournisseur.envoyer_texte(numero, textes.NON_COMPRIS)
@@ -312,6 +318,8 @@ def traiter_message_personne(message: MessageRecu, fournisseur: Fournisseur, con
 def traiter_message_pharmacie(
     message: MessageRecu, pharmacie: sqlite3.Row, fournisseur: Fournisseur, connexion: sqlite3.Connection
 ) -> None:
-    """Pharmacie partenaire. Emplacement : rupture, retour en stock et résumé (parcours 3)
-    et réponses aux demandes d'équivalent (parcours 2) arrivent ensuite."""
+    """Pharmacie partenaire : réponses aux demandes d'équivalent (parcours 2). Emplacement
+    pour la rupture, le retour en stock et le résumé (parcours 3)."""
+    if message.type is TypeMessage.CHOIX and equivalent.repondre_pharmacie(message, pharmacie, fournisseur, connexion):
+        return
     fournisseur.envoyer_texte(message.expediteur, textes.PROVISOIRE_PHARMACIE.format(pharmacie=pharmacie["nom"]))

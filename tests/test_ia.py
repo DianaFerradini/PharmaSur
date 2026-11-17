@@ -119,7 +119,7 @@ def test_recherche_d_un_numero_deja_venu_salue_puis_resultats(chemin_db):
     assert textes[0] == "Bonjour 👋"
     assert textes[1].startswith("Vos médicaments : Doliprane")
     textes, _ = envoyer(chemin_db, "Smecta", reponse("recherche", ["Smecta"]))
-    assert textes == ["🚫 Smecta : introuvable aujourd'hui dans les pharmacies partenaires."]
+    assert textes == ["🚫 Smecta : introuvable aujourd'hui dans les pharmacies partenaires.\nVoulez-vous qu'on demande aux pharmacies si l'une d'elles a une solution ?"]
 
 
 def test_salutation_seule(chemin_db):
