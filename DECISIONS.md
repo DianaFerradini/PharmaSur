@@ -3,7 +3,7 @@
 Journal des décisions prises pendant la conception des parcours utilisateurs. Mis à jour après chaque décision.
 Vocabulaire : voir [GLOSSARY.md](GLOSSARY.md). Parcours étape par étape : voir [PARCOURS.md](PARCOURS.md). Décisions structurantes : voir [docs/adr/](docs/adr/).
 
-_Dernière mise à jour : 16 novembre 2026_
+_Dernière mise à jour : 17 novembre 2026_
 
 ## Contexte
 
@@ -172,6 +172,7 @@ Ordre de construction : 1, 6, 2 et 7 pour le quart de finale, puis 3 s'il reste 
 
 - **Décision** : un membre de l'équipe qui parle wolof enregistre un vocal fixe par situation, et le bot envoie le bon enregistrement. Les noms et adresses sont dans la fiche écrite (D23).
 - **Pourquoi** : aucun service en ligne ne fait parler le wolof. Les modèles ouverts demandent un serveur avec carte graphique et leur qualité est inconnue. Une vraie voix, c'est environ une heure de travail et une qualité parfaite.
+- **Fiche d'enregistrement** : [VOCAUX.md](VOCAUX.md) (consignes, texte de chaque vocal, noms des fichiers).
 - **Vocaux à enregistrer** :
 
 | # | Situation | Contenu du vocal | Décision |
@@ -307,6 +308,7 @@ _D34 à D38 sont des choix purement techniques, que l'agent a tranchés à la de
 
 - **Décision** : la personne qui parle wolof enregistre les 12 vocaux (D24) comme des messages vocaux WhatsApp, envoyés à un membre de l'équipe, qui les télécharge depuis WhatsApp Web. Ils sont déjà au format OGG/Opus, le seul que WhatsApp affiche comme message vocal, donc il n'y a rien à convertir.
 - **Si un vocal arrive dans un autre format** (application dictaphone, par exemple) : l'agent le convertit avec la bibliothèque Python PyAV, qui inclut ffmpeg.
+- **Rangement** : chaque fichier est renommé de `01-accueil-complet.ogg` à `12-non-compris.ogg` et rangé dans `pharmasur/vocaux/`. La liste complète est dans [VOCAUX.md](VOCAUX.md).
 - **Les vocaux de Fatou** arrivent eux aussi en OGG/Opus, un format qu'ElevenLabs accepte tel quel.
 
 ### D38 — Les secrets restent hors du dépôt

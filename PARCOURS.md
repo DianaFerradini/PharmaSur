@@ -25,7 +25,7 @@ Les textes des messages sont des propositions. On peut les retoucher pendant la 
 - Le **Smecta** n'est dans aucun catalogue : il est introuvable (parcours 2).
 - La **Ventoline** n'est pas dans le catalogue de Baobab : elle sert pour le cas hors catalogue (parcours 3).
 - Quelques dizaines de **recherches simulées** sont à préremplir, pour avoir des chiffres crédibles dans le résumé (D14) et le tableau de bord (D26).
-- Les **12 vocaux** de D24 sont à faire enregistrer par la personne de l'équipe qui parle wolof.
+- Les **12 vocaux** de D24 sont à faire enregistrer par la personne de l'équipe qui parle wolof, avec la fiche [VOCAUX.md](VOCAUX.md).
 - Les noms, adresses et numéros sont fictifs, à remplacer.
 - Le téléphone de Baobab doit écrire au bot peu avant la démo, pour rester dans la fenêtre WhatsApp de 24 h (D16).
 
