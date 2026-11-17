@@ -11,7 +11,7 @@ Le bot ne sait pas parler wolof : il choisit l'un de ces enregistrements selon l
 1. **Aucun nom** : pas de nom de médicament ni de pharmacie, pas d'adresse, pas de prix. Vous pouvez dire « PharmaSûr », le nom du service.
 2. **Rien de plus que le texte** : pas de conseil de santé, jamais de médicament proposé, et jamais l'idée qu'on peut acheter par PharmaSûr.
 3. **Le sens, pas le mot à mot** : dites chaque texte en wolof de tous les jours, comme vous le diriez à une voisine. Les mots que tout le monde dit en français (pharmacie, ordonnance, SAMU) peuvent rester en français.
-4. **Court** : entre 5 et 20 secondes par vocal.
+4. **Court** : une vingtaine de secondes par vocal, 30 au plus.
 5. **Ton calme et poli** : la personne cherche souvent un médicament pour un proche malade.
 
 ## Comment enregistrer
@@ -32,10 +32,10 @@ Ne dites pas le numéro dans le vocal lui-même : la personne qui recevra le voc
 
 ### 🔊 3 — Confirmation de lecture
 
-- **Quand le bot l'envoie** : quand il a compris des noms de médicaments dans un vocal ou sur une photo. Le message écrit montre la liste des noms, avec deux boutons pour valider ou corriger (D13).
+- **Quand le bot l'envoie** : quand il a compris des noms de médicaments dans un vocal ou sur une photo. Le message écrit montre la liste des noms, avec deux boutons : ✅ pour valider et ✏️ pour corriger (D13).
 - **À dire en wolof** :
 
-  > Voici les médicaments que j'ai compris. Vérifiez-les dans le message écrit.
+  > Voici les médicaments que j'ai compris. Vérifiez-les dans le message écrit. Si c'est juste, touchez la coche verte. Sinon, touchez le crayon pour corriger.
 
 ### 🔊 2 — Accueil court
 
@@ -49,7 +49,7 @@ Ne dites pas le numéro dans le vocal lui-même : la personne qui recevra le voc
 - **Quand** : le bot a trouvé des pharmacies. Le message écrit donne, pour chacune, son nom, son adresse, son téléphone et un lien d'itinéraire (D7).
 - **À dire en wolof** :
 
-  > Des pharmacies ont vos médicaments. Tous les détails sont dans le message écrit. Achetez uniquement en pharmacie, avec votre ordonnance.
+  > Des pharmacies ont vos médicaments. Tous les détails sont dans le message écrit. Touchez le numéro pour appeler la pharmacie, ou le lien pour voir le chemin. Achetez uniquement en pharmacie, avec votre ordonnance.
 
 ## Partie 2 — Les autres vocaux
 
@@ -127,7 +127,7 @@ Le bot affiche aussi des boutons sous certains messages. Dites à l'équipe si u
 - **✅ et ✏️** : valider ou corriger la liste des médicaments compris (vocal 3, parcours 7).
 - **Oui et Non** : accepter ou refuser qu'on interroge les pharmacies (vocal 6).
 
-Si un mot wolof serait plus clair, proposez-le.
+Si un mot wolof serait plus clair, proposez-le. Le vocal 3 parle de la coche et du crayon : si vous pensez qu'ils ne seront pas compris, dites-le avant d'enregistrer ce vocal.
 
 ## Pour la personne qui récupère les vocaux
 
@@ -137,7 +137,7 @@ Si un mot wolof serait plus clair, proposez-le.
 4. Écoutez chaque vocal et vérifiez :
    - qu'on l'entend bien, sans bruit derrière ;
    - qu'il ne contient aucun nom de médicament ou de pharmacie, aucune adresse, aucun prix ;
-   - qu'il dure 20 secondes au plus ;
+   - qu'il dure 30 secondes au plus ;
    - que le sens correspond au texte de la fiche.
 5. Ajoutez les fichiers au dépôt GitHub, ou passez-les à la personne qui code le bot.
 
