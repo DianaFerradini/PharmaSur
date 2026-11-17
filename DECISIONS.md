@@ -137,6 +137,13 @@ Ordre de construction : 1, 6, 2 et 7 pour le quart de finale, puis 3 s'il reste 
 - **Pourquoi 23 heures** : un délai court laisserait trop peu de temps aux pharmaciens pour répondre. Et WhatsApp n'autorise un message libre que dans les 24 heures qui suivent le dernier message de la personne : 23 heures garantit que le message de fin de délai passe.
 - **Écarté** : un seul message à la fin du délai (trop lent si la personne est pressée) et un récapitulatif des « oui » suivants (l'information arriverait parfois 20 heures après).
 
+### D40 — Une nouvelle recherche ne ferme pas la demande d'équivalent en cours
+
+- **Décision** : si la personne lance une nouvelle recherche alors qu'une demande d'équivalent est ouverte, les deux continuent. La nouvelle recherche est traitée normalement, et la demande en cours reste ouverte jusqu'à la fin de ses 23 heures (D17). Si une pharmacie touche « Oui » ensuite, la personne est prévenue, en rappelant de quel médicament il s'agit.
+- **Conséquences** : un même numéro peut avoir plusieurs demandes d'équivalent ouvertes en même temps. Chacune est liée au numéro jusqu'à sa clôture (D15), et la réponse d'une pharmacie porte sur une demande précise : chaque message envoyé aux pharmacies a ses propres boutons.
+- **Pourquoi** : la personne ne perd jamais une réponse qui aurait pu arriver, et le bot ne lui pose pas de question de plus.
+- **Écarté** : clore l'ancienne demande à chaque nouvelle recherche (la personne perd sans le savoir une réponse possible) et demander à la personne si elle garde la demande (une question de plus).
+
 ## Photo (parcours 6)
 
 ### D12 — La photo d'ordonnance est acceptée
@@ -349,7 +356,6 @@ _D34 à D38 sont des choix purement techniques, que l'agent a tranchés à la de
 
 Aucune pour les parcours. Ces points restent à régler pendant l'implémentation :
 
-- ce que fait le bot si la personne lance une nouvelle recherche alors qu'une demande d'équivalent est en cours ;
 - ce que fait le bot si une pharmacie touche « Oui » après les 23 heures ;
 - le contenu exact de la page de présentation et du tableau de bord (D26) ;
 - l'option « introuvables partout » dans le résumé.
