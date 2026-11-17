@@ -11,18 +11,19 @@ from dataclasses import dataclass
 
 from dotenv import load_dotenv
 
-# Modèle Claude par défaut, en attendant la réponse à Q32 (voir DECISIONS.md).
-MODELE_PAR_DEFAUT = "claude-opus-5-5"
+# Modèles Claude par défaut (D39) : Haiku pour le texte, Opus pour les photos.
+MODELE_TEXTE = "claude-haiku-5-5"
+MODELE_PHOTO = "claude-opus-5-5"
 
 
 @dataclass(frozen=True)
 class ModelesClaude:
-    """Un modèle par tâche, pour pouvoir changer de modèle tâche par tâche (Q32)."""
+    """Un modèle par tâche, réglable tâche par tâche (D39)."""
 
-    tri: str = MODELE_PAR_DEFAUT  # salutation, recherche, hors sujet, urgence
-    extraction: str = MODELE_PAR_DEFAUT  # médicaments dans un texte ou une transcription
-    photo: str = MODELE_PAR_DEFAUT  # lecture d'une photo d'ordonnance ou de boîte
-    pharmacie: str = MODELE_PAR_DEFAUT  # messages des pharmacies en texte libre
+    tri: str = MODELE_TEXTE  # salutation, recherche, hors sujet, urgence
+    extraction: str = MODELE_TEXTE  # médicaments dans un texte ou une transcription
+    photo: str = MODELE_PHOTO  # lecture d'une photo d'ordonnance ou de boîte
+    pharmacie: str = MODELE_TEXTE  # messages des pharmacies en texte libre
 
 
 @dataclass(frozen=True)
@@ -54,9 +55,9 @@ def charger_config() -> Config:
         numero_pharmacie_baobab=env("NUMERO_PHARMACIE_BAOBAB", ""),
         db_path=env("DB_PATH", "pharmasur.db"),
         modeles=ModelesClaude(
-            tri=env("CLAUDE_MODELE_TRI", MODELE_PAR_DEFAUT),
-            extraction=env("CLAUDE_MODELE_EXTRACTION", MODELE_PAR_DEFAUT),
-            photo=env("CLAUDE_MODELE_PHOTO", MODELE_PAR_DEFAUT),
-            pharmacie=env("CLAUDE_MODELE_PHARMACIE", MODELE_PAR_DEFAUT),
+            tri=env("CLAUDE_MODELE_TRI", MODELE_TEXTE),
+            extraction=env("CLAUDE_MODELE_EXTRACTION", MODELE_TEXTE),
+            photo=env("CLAUDE_MODELE_PHOTO", MODELE_PHOTO),
+            pharmacie=env("CLAUDE_MODELE_PHARMACIE", MODELE_TEXTE),
         ),
     )

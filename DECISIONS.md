@@ -320,6 +320,14 @@ _D34 à D38 sont des choix purement techniques, que l'agent a tranchés à la de
 - **Sur Railway** : les mêmes variables, saisies dans l'onglet Variables du service.
 - **Contenu** : les clés Meta (jeton permanent, identifiant du numéro, jeton de vérification du webhook, secret de l'application pour vérifier la signature des messages reçus), la clé Anthropic, la clé ElevenLabs, ainsi que le vrai numéro du téléphone qui joue Baobab. Les numéros de l'équipe ne figurent donc pas dans le code.
 
+### D39 — Haiku lit les textes, Opus lit les photos
+
+- **Décision** : Claude Haiku 5.5 (`claude-haiku-5-5`) traite tout le texte : le tri des messages, l'extraction des noms de médicaments (texte écrit ou transcription d'un vocal) et les messages des pharmacies. Claude Opus 5.5 (`claude-opus-5-5`) lit les photos d'ordonnance et de boîte.
+- **Budget** : 10 000 FCFA pour les tests et les quatre démos (pré-pitch, quart de finale, demi-finale, finale), soit environ 16 $ utilisables après les frais. Une limite de dépense est fixée à ce montant dans la console Anthropic.
+- **Pourquoi** : la lecture des photos est la tâche la plus difficile, et c'est là qu'une erreur se voit devant le jury. Une photo lue par Opus coûte environ 0,08 $, et un message lu par Haiku moins de 0,002 $. Estimé largement (400 appels de test, 11 passages par démo), le total est d'environ 13 $. Avec Opus partout, il serait d'environ 80 $.
+- **Écarté** : Opus partout (environ 80 $), Sonnet 5.5 partout (environ 40 $), Haiku partout (environ 2 $, mais la lecture des ordonnances manuscrites est moins sûre).
+- **Point à surveiller** : l'extraction des noms dans la transcription d'un vocal en wolof, qui contient beaucoup d'erreurs (D32). Si Haiku s'y trompe, seule la variable `CLAUDE_MODELE_EXTRACTION` est à changer.
+
 ## Options en suspens
 
 - **« Introuvables partout » dans le résumé** : une ligne comme « Introuvables chez toutes les pharmacies partenaires : Smecta (12 recherches) ». L'option est valable et sera tranchée pendant l'implémentation. Condition : une formulation neutre, jamais d'incitation à s'approvisionner, et une vérification par les juristes du groupe.
@@ -341,7 +349,6 @@ _D34 à D38 sont des choix purement techniques, que l'agent a tranchés à la de
 
 Aucune pour les parcours. Ces points restent à régler pendant l'implémentation :
 
-- le modèle d'IA qui comprend les messages et lit les photos (Claude Opus 5.5, Sonnet 5.5, Haiku 5.5, ou Haiku pour le texte et Opus pour les photos). Le choix dépend de ce que le groupe est prêt à payer : de moins de 1 $ à une dizaine de dollars pour la démo. Le code règle le modèle tâche par tâche, donc le choix peut se faire jusqu'au 17/11 au matin ;
 - ce que fait le bot si la personne lance une nouvelle recherche alors qu'une demande d'équivalent est en cours ;
 - ce que fait le bot si une pharmacie touche « Oui » après les 23 heures ;
 - le contenu exact de la page de présentation et du tableau de bord (D26) ;
