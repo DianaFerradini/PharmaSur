@@ -70,7 +70,7 @@ def test_parametres_de_l_appel_opus_avec_repli():
     assert appel["model"] == "claude-opus-5-5"
     assert appel["fallbacks"] == "default"
     assert appel["betas"] == ["server-side-fallback-2026-07-01"]
-    assert appel["output_config"]["effort"] == "low"
+    assert appel["output_config"]["effort"] == "medium"
     assert appel["output_config"]["format"]["type"] == "json_schema"
     assert "temperature" not in appel and "thinking" not in appel
 

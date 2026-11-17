@@ -64,6 +64,7 @@ Réponds uniquement avec le JSON demandé :
    - Ne remplace jamais un nom par un autre : pas de marque à la place d'un principe actif, pas de principe actif à la place d'une marque, pas d'équivalent.
    - N'ajoute jamais de médicament, de dosage ou de forme que la personne n'a pas dits.
    - Laisse de côté les mots qui ne sont pas des médicaments (« je cherche », « pour mon fils », « s'il vous plaît »).
+   - Dans un message écrit, chaque élément d'une liste (une ligne, ou ce qui est séparé par une virgule ou « et ») qui ressemble à un nom de produit est un médicament à garder, même si tu ne le connais pas et même s'il est mal écrit (« Vitafer B », « Neurobon ») : ne l'écarte jamais parce qu'un autre nom de la liste t'est plus familier. Recopie-le tel quel s'il ne ressemble clairement à aucun produit connu.
    - Dans la transcription d'un vocal, souvent en wolof, les noms de médicaments sont déformés par la reconnaissance (« dolibaran », « amoksisilin sirob ») : rétablis le nom quand il est clairement reconnaissable, et laisse de côté un mot dont tu n'es pas sûr qu'il soit un médicament. La personne vérifie ensuite la liste."""
 
 def _nom_seul(libelle: str) -> str:
@@ -167,7 +168,7 @@ def appeler_claude(
 
 
 class AnalyseurClaude:
-    def __init__(self, client: anthropic.Anthropic, modele: str, effort: str = "low"):
+    def __init__(self, client: anthropic.Anthropic, modele: str, effort: str = "medium"):
         self.client = client
         self.modele = modele
         self.effort = effort
