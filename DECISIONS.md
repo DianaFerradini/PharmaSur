@@ -3,7 +3,7 @@
 Journal des décisions prises pendant la conception des parcours utilisateurs. Mis à jour après chaque décision.
 Vocabulaire : voir [GLOSSARY.md](GLOSSARY.md). Parcours étape par étape : voir [PARCOURS.md](PARCOURS.md). Décisions structurantes : voir [docs/adr/](docs/adr/).
 
-_Dernière mise à jour : 17 novembre 2026_
+_Dernière mise à jour : 18 novembre 2026_
 
 ## Contexte
 
@@ -347,6 +347,14 @@ _D34 à D38 sont des choix purement techniques, que l'agent a tranchés à la de
 - **Pourquoi** : aucun risque de panne pendant le passage (blocage du compte Meta, Wi-Fi de la salle, PC en veille), et pas d'attente de quelques secondes entre chaque message et sa réponse.
 - **Conséquences** : le bot reste fonctionnel sur le PC avec ngrok (D31), en secours, ou si le jury veut voir une recherche en direct. Les captures et les vidéos doivent montrer les cinq parcours (1, 2, 3, 6 et 7) dans l'ordre de l'enchaînement de [PARCOURS.md](PARCOURS.md).
 - **Écarté** : la démo en direct sur deux téléphones, plus convaincante mais exposée aux pannes et aux temps de réponse.
+
+## Pitch
+
+### D43 — Le pitch montre la démo sur une slide de transition, puis une slide par parcours
+
+- **Décision** : dans `pitch.pptx`, juste après la slide « Présentation de la solution », une slide de transition « Démo » ouvre la démonstration. Elle est suivie d'une slide par parcours montré au jury (1, 2, 3, 6 et 7), soit 6 slides en plus.
+- **Contenu de chaque slide de parcours** : un emplacement pour la capture d'écran ou la vidéo du parcours (D42), et les phrases fortes qui s'y rapportent.
+- **Écarté** : une slide par parcours sans transition, et une seule slide « Démo » avec les phrases fortes en notes du présentateur.
 
 ## Options en suspens
 
