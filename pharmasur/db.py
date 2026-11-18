@@ -145,6 +145,22 @@ CREATE TABLE IF NOT EXISTS forme_conversation (
 );
 """
 DUREE_FORME = timedelta(hours=24)
+
+# Ajoutée avec le parcours 3 : créée aussi dans une base qui existait déjà.
+SCHEMA_SIGNALEMENT = """
+-- Signalement de rupture ou de retour en stock en attente de confirmation (D19, D20).
+-- Supprimé dès la réponse, et au plus tard après 24 h.
+CREATE TABLE IF NOT EXISTS signalement_en_attente (
+    id             INTEGER PRIMARY KEY,
+    pharmacie_id   INTEGER NOT NULL REFERENCES pharmacie(id),
+    produit        TEXT NOT NULL,             -- libellé du catalogue, ou nom donné s'il est hors catalogue
+    rupture        INTEGER NOT NULL,          -- 1 : rupture, 0 : retour en stock
+    hors_catalogue INTEGER NOT NULL,          -- 1 : à ajouter au catalogue (D20)
+    cree_le        TEXT NOT NULL
+);
+"""
+DUREE_SIGNALEMENT = timedelta(hours=24)
+DUREE_RESUME = timedelta(days=7)  # « Votre semaine avec PharmaSûr » (D14)
 DUREE_DEMANDE = timedelta(hours=23)  # D17
 
 # --- Données simulées (PARCOURS.md, « Données simulées à préparer ») ---
@@ -238,14 +254,14 @@ def initialiser(chemin: str, numero_baobab: str = "", graine: int | None = None)
         connexion = connecter(chemin)
         try:
             with connexion:
-                connexion.executescript(SCHEMA_LECTURE + SCHEMA_EQUIVALENT + SCHEMA_FORME)  # tables ajoutées depuis la création
+                connexion.executescript(SCHEMA_LECTURE + SCHEMA_EQUIVALENT + SCHEMA_FORME + SCHEMA_SIGNALEMENT)  # tables ajoutées depuis la création
         finally:
             connexion.close()
         return False
     connexion = connecter(chemin)
     try:
         with connexion:
-            connexion.executescript(SCHEMA + SCHEMA_LECTURE + SCHEMA_EQUIVALENT + SCHEMA_FORME)
+            connexion.executescript(SCHEMA + SCHEMA_LECTURE + SCHEMA_EQUIVALENT + SCHEMA_FORME + SCHEMA_SIGNALEMENT)
             remplir(connexion, numero_baobab, random.Random(graine))
     finally:
         connexion.close()
@@ -530,7 +546,94 @@ def clore_demande(connexion: sqlite3.Connection, demande_id: int) -> None:
         connexion.execute("UPDATE demande_equivalent SET close = 1, numero = NULL WHERE id = ?", (demande_id,))
 
 
+
+# --- Côté pharmacie : stock, signalements, résumé (parcours 3, D2, D14, D18-D20) ---
+
+
+def catalogue_pharmacie(connexion: sqlite3.Connection, pharmacie_id: int) -> list[sqlite3.Row]:
+    return connexion.execute(
+        "SELECT libelle, en_rupture FROM catalogue WHERE pharmacie_id = ? ORDER BY id", (pharmacie_id,)
+    ).fetchall()
+
+
+def definir_rupture(connexion: sqlite3.Connection, pharmacie_id: int, produit: str, rupture: bool) -> None:
+    """Rupture ou retour en stock d'un produit du catalogue (D2). Hors catalogue, il est ajouté (D20)."""
+    with connexion:
+        modifie = connexion.execute(
+            "UPDATE catalogue SET en_rupture = ? WHERE pharmacie_id = ? AND libelle = ?",
+            (int(rupture), pharmacie_id, produit),
+        ).rowcount
+        if not modifie:
+            connexion.execute(
+                "INSERT INTO catalogue (pharmacie_id, libelle, en_rupture) VALUES (?, ?, ?)",
+                (pharmacie_id, produit, int(rupture)),
+            )
+
+
+def creer_signalement(
+    connexion: sqlite3.Connection,
+    pharmacie_id: int,
+    produit: str,
+    rupture: bool,
+    hors_catalogue: bool,
+    instant: datetime | None = None,
+) -> int:
+    instant = _instant(instant)
+    with connexion:
+        limite = (instant - DUREE_SIGNALEMENT).isoformat()
+        connexion.execute("DELETE FROM signalement_en_attente WHERE cree_le < ?", (limite,))
+        return connexion.execute(
+            "INSERT INTO signalement_en_attente (pharmacie_id, produit, rupture, hors_catalogue, cree_le)"
+            " VALUES (?, ?, ?, ?, ?)",
+            (pharmacie_id, produit, int(rupture), int(hors_catalogue), instant.isoformat()),
+        ).lastrowid
+
+
+def prendre_signalement(
+    connexion: sqlite3.Connection, signalement_id: int, pharmacie_id: int, instant: datetime | None = None
+) -> sqlite3.Row | None:
+    """Renvoie le signalement en attente et l'efface. None s'il n'existe plus ou a expiré."""
+    limite = (_instant(instant) - DUREE_SIGNALEMENT).isoformat()
+    with connexion:
+        ligne = connexion.execute(
+            "SELECT * FROM signalement_en_attente WHERE id = ? AND pharmacie_id = ?", (signalement_id, pharmacie_id)
+        ).fetchone()
+        if ligne is None:
+            return None
+        connexion.execute("DELETE FROM signalement_en_attente WHERE id = ?", (signalement_id,))
+    return ligne if ligne["cree_le"] >= limite else None
+
+
+def resume_pharmacie(
+    connexion: sqlite3.Connection, pharmacie_id: int, instant: datetime | None = None, nombre_max: int = 5
+) -> tuple[int, list[tuple[str, int]]]:
+    """D14 : le nombre de recherches où la pharmacie est apparue sur 7 jours, et sa demande
+    manquée (médicaments recherchés qu'elle n'avait pas, avec le nombre de recherches)."""
+    depuis = (_instant(instant) - DUREE_RESUME).isoformat()
+    apparitions = connexion.execute(
+        "SELECT COUNT(DISTINCT rm.recherche_id) FROM recherche_pharmacie rp"
+        " JOIN recherche_medicament rm ON rm.id = rp.recherche_medicament_id"
+        " JOIN recherche r ON r.id = rm.recherche_id"
+        " WHERE rp.pharmacie_id = ? AND r.date >= ?",
+        (pharmacie_id, depuis),
+    ).fetchone()[0]
+    manquee = connexion.execute(
+        "SELECT MIN(rm.medicament) AS medicament, COUNT(*) AS nombre FROM recherche_medicament rm"
+        " JOIN recherche r ON r.id = rm.recherche_id"
+        " WHERE r.date >= ? AND NOT EXISTS ("
+        "   SELECT 1 FROM recherche_pharmacie rp WHERE rp.recherche_medicament_id = rm.id AND rp.pharmacie_id = ?)"
+        " GROUP BY LOWER(rm.medicament) ORDER BY nombre DESC, medicament LIMIT ?",
+        (depuis, pharmacie_id, nombre_max),
+    ).fetchall()
+    return apparitions, [(ligne["medicament"], ligne["nombre"]) for ligne in manquee]
+
+
 __all__ = [
+    "catalogue_pharmacie",
+    "creer_signalement",
+    "definir_rupture",
+    "prendre_signalement",
+    "resume_pharmacie",
     "Medicament",
     "charger_pharmacies",
     "connecter",

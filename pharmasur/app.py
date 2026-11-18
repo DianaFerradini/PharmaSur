@@ -19,6 +19,7 @@ from .bot import traiter_message
 from .equivalent import traiter_echeances
 from .config import Config, charger_config
 from .ia import creer_analyseur, creer_client, creer_lecteur
+from .pharmacie import creer_analyseur_pharmacie
 from .transcription import creer_transcripteur
 from .vocaux import AvecVocaux, BanqueVocaux
 from .whatsapp import Fournisseur, MessageRecu
@@ -57,13 +58,19 @@ def creer_app(
         client = creer_client(config)
         analyseur = creer_analyseur(config, client)
         lecteur = creer_lecteur(config, client)
+        analyseur_pharmacie = creer_analyseur_pharmacie(config, client)
         transcripteur = creer_transcripteur(config)
         if analyseur is None:
             log.warning("ANTHROPIC_API_KEY est vide : le bot découpe les messages sans IA.")
         if transcripteur is None:
             log.warning("ELEVENLABS_API_KEY est vide : les vocaux reçoivent la réponse provisoire.")
         traitement = functools.partial(
-            traiter_message, analyseur=analyseur, lecteur=lecteur, transcripteur=transcripteur, banque=banque
+            traiter_message,
+            analyseur=analyseur,
+            lecteur=lecteur,
+            transcripteur=transcripteur,
+            banque=banque,
+            analyseur_pharmacie=analyseur_pharmacie,
         )
 
     @asynccontextmanager

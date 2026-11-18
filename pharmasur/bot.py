@@ -12,7 +12,9 @@ import sqlite3
 from difflib import SequenceMatcher
 
 from . import db, equivalent, textes
+from . import pharmacie as pharmacie_
 from .ia import AnalyseurClaude, Categorie, EchecAnalyse, LecteurPhoto, Lisibilite
+from .pharmacie import AnalyseurPharmacie
 from .recherche import Medicament, analyser_medicament, decouper_texte, formater_fiche, normaliser, rechercher
 from .transcription import EchecTranscription, Transcripteur
 from .vocaux import AvecVocaux, BanqueVocaux
@@ -37,6 +39,7 @@ def traiter_message(
     lecteur: LecteurPhoto | None = None,
     transcripteur: Transcripteur | None = None,
     banque: BanqueVocaux | None = None,
+    analyseur_pharmacie: AnalyseurPharmacie | None = None,
 ) -> None:
     connexion = db.connecter(chemin_db)
     try:
@@ -45,7 +48,7 @@ def traiter_message(
             fournisseur = AvecVocaux(fournisseur, banque, lambda numero: db.est_vocal(connexion, numero))
         pharmacie = db.pharmacie_par_numero(connexion, message.expediteur)
         if pharmacie is not None:
-            traiter_message_pharmacie(message, pharmacie, fournisseur, connexion)
+            traiter_message_pharmacie(message, pharmacie, fournisseur, connexion, analyseur_pharmacie)
             return
         # La forme du message (vocal ou texte) décide de la forme des réponses (D23).
         # Une photo ou un bouton touché garde la forme précédente.
@@ -407,10 +410,12 @@ def traiter_message_personne(message: MessageRecu, fournisseur: Fournisseur, con
 
 
 def traiter_message_pharmacie(
-    message: MessageRecu, pharmacie: sqlite3.Row, fournisseur: Fournisseur, connexion: sqlite3.Connection
+    message: MessageRecu,
+    pharmacie: sqlite3.Row,
+    fournisseur: Fournisseur,
+    connexion: sqlite3.Connection,
+    analyseur: AnalyseurPharmacie | None = None,
 ) -> None:
-    """Pharmacie partenaire : réponses aux demandes d'équivalent (parcours 2). Emplacement
-    pour la rupture, le retour en stock et le résumé (parcours 3)."""
-    if message.type is TypeMessage.CHOIX and equivalent.repondre_pharmacie(message, pharmacie, fournisseur, connexion):
-        return
-    fournisseur.envoyer_texte(message.expediteur, textes.PROVISOIRE_PHARMACIE.format(pharmacie=pharmacie["nom"]))
+    """Pharmacie partenaire : réponses aux demandes d'équivalent (parcours 2), puis
+    rupture, retour en stock et résumé (parcours 3, voir `pharmacie.py`)."""
+    pharmacie_.traiter_message_pharmacie(message, pharmacie, fournisseur, connexion, analyseur)

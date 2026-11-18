@@ -104,3 +104,29 @@ PHOTO_ILLISIBLE = (
 PROVISOIRE_PHOTO = "📸 Photo bien reçue. La recherche par photo arrive très bientôt."
 PROVISOIRE_VOCAL = "🎤 Vocal bien reçu. La recherche par vocal arrive très bientôt."
 PROVISOIRE_PHARMACIE = "✅ Message reçu, {pharmacie}. Les signalements de rupture arrivent très bientôt."
+
+# --- Parcours 3 : côté pharmacie (D14, D18, D19, D20) ---
+# Boutons en texte : les pharmaciens lisent (D10).
+BOUTON_STOCK_OUI = "Oui"
+BOUTON_STOCK_NON = "Non"
+RUPTURE_NOTEE = "✅ {produit} noté en rupture."
+RETOUR_NOTE = "✅ {produit} de nouveau disponible."
+CONFIRMER_RUPTURE = "Vous voulez dire : {produit} en rupture ?"
+CONFIRMER_RETOUR = "Vous voulez dire : {produit} de nouveau disponible ?"
+HORS_CATALOGUE_RUPTURE = "{produit} n'est pas dans votre catalogue.\nL'ajouter comme en rupture ?"
+HORS_CATALOGUE_RETOUR = "{produit} n'est pas dans votre catalogue.\nL'ajouter comme disponible ?"
+AJOUT_RUPTURE = "✅ {produit} ajouté à votre catalogue, en rupture."
+AJOUT_DISPONIBLE = "✅ {produit} ajouté à votre catalogue, disponible."
+SIGNALEMENT_ANNULE = "D'accord, rien n'est changé."
+SIGNALEMENT_EXPIRE = "Cette confirmation a expiré. Réécrivez le signalement si besoin."
+AIDE_PHARMACIE = (
+    "Je n'ai pas compris 🙏 Vous pouvez m'écrire, comme vous parlez :\n"
+    "• une rupture : « plus de Doliprane 1000 »\n"
+    "• un retour en stock : « le Doliprane 1000 est revenu »\n"
+    "• « résumé » pour voir vos chiffres de la semaine."
+)
+RESUME_TITRE = "📊 Votre semaine avec PharmaSûr"
+RESUME_APPARITIONS = "• Vous êtes apparu dans {nombre} résultat{s} de recherche."
+RESUME_MANQUEE = "• Demande manquée :"
+RESUME_MANQUEE_LIGNE = "  – {medicament} : {nombre} recherche{s}"
+RESUME_MANQUEE_AUCUNE = "• Demande manquée : aucune cette semaine."
