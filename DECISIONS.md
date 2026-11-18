@@ -341,6 +341,13 @@ _D34 à D38 sont des choix purement techniques, que l'agent a tranchés à la de
 - **Écarté** : Opus partout (environ 80 $), Sonnet 5.5 partout (environ 40 $), Haiku partout (environ 2 $, mais la lecture des ordonnances manuscrites est moins sûre).
 - **Point à surveiller** : l'extraction des noms dans la transcription d'un vocal en wolof, qui contient beaucoup d'erreurs (D32). Si Haiku s'y trompe, seule la variable `CLAUDE_MODELE_EXTRACTION` est à changer.
 
+### D42 — La démo est montrée en captures d'écran et en vidéos
+
+- **Décision** : devant le jury, les parcours sont montrés avec des captures d'écran et des vidéos enregistrées sur les vrais téléphones, et non en direct.
+- **Pourquoi** : aucun risque de panne pendant le passage (blocage du compte Meta, Wi-Fi de la salle, PC en veille), et pas d'attente de quelques secondes entre chaque message et sa réponse.
+- **Conséquences** : le bot reste fonctionnel sur le PC avec ngrok (D31), en secours, ou si le jury veut voir une recherche en direct. Les captures et les vidéos doivent montrer les cinq parcours (1, 2, 3, 6 et 7) dans l'ordre de l'enchaînement de [PARCOURS.md](PARCOURS.md).
+- **Écarté** : la démo en direct sur deux téléphones, plus convaincante mais exposée aux pannes et aux temps de réponse.
+
 ## Options en suspens
 
 - **« Introuvables partout » dans le résumé** : une ligne comme « Introuvables chez toutes les pharmacies partenaires : Smecta (12 recherches) ». L'option est valable et sera tranchée pendant l'implémentation. Condition : une formulation neutre, jamais d'incitation à s'approvisionner, et une vérification par les juristes du groupe.
