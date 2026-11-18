@@ -354,8 +354,9 @@ _D34 à D38 sont des choix purement techniques, que l'agent a tranchés à la de
 
 - **Décision** : dans `pitch.pptx`, juste après la slide « Présentation de la solution », une slide de transition « Démo » ouvre la démonstration. Elle est suivie d'une slide par séquence filmée, avec les phrases fortes qui s'y rapportent.
 - **Séquence de l'ordonnance (parcours 6, 1 et 2)** : une seule slide, car c'est une seule vidéo. Elle commence quand Fatou envoie la photo de l'ordonnance et finit quand elle reçoit 💡 « La Pharmacie Baobab a peut-être une solution ». Une capture d'écran du téléphone de Baobab l'accompagne, pour montrer la demande d'équivalent côté pharmacie.
-- **Ensuite** : une slide pour le vocal en wolof (parcours 7) et une pour le côté pharmacie (parcours 3).
-- **Écarté** : une slide par parcours, avec ou sans transition ; une seule slide « Démo » avec les phrases fortes en notes du présentateur ; la séquence de l'ordonnance découpée en deux ou trois slides.
+- **Ordre** : ordonnance (vidéo), puis pharmacie (parcours 3, en captures d'écran), puis vocal en wolof (parcours 7, vidéo). La démo se termine sur le vocal, qui est le parcours le plus impressionnant. Le côté pharmacie suit la séquence de l'ordonnance, qui finit chez Baobab. Le Résumé (« les clients que vous ratez ») arrive donc après que le jury a vu une cliente chercher.
+- **Usage** : le temps du pitch est limité, donc tout ne sera pas forcément montré. Ces slides servent de preuves que les fonctionnalités existent, et on y revient pendant les questions du jury.
+- **Écarté** : une slide par parcours, avec ou sans transition ; une seule slide « Démo » avec les phrases fortes en notes du présentateur ; la séquence de l'ordonnance découpée en deux ou trois slides ; la pharmacie en premier, qui ouvre sur des captures et place le Résumé avant tout client.
 
 ## Options en suspens
 
