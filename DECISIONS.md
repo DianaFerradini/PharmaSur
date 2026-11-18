@@ -350,11 +350,12 @@ _D34 à D38 sont des choix purement techniques, que l'agent a tranchés à la de
 
 ## Pitch
 
-### D43 — Le pitch montre la démo sur une slide de transition, puis une slide par parcours
+### D43 — Le pitch montre la démo sur une slide de transition, puis une slide par séquence filmée
 
-- **Décision** : dans `pitch.pptx`, juste après la slide « Présentation de la solution », une slide de transition « Démo » ouvre la démonstration. Elle est suivie d'une slide par parcours montré au jury (1, 2, 3, 6 et 7), soit 6 slides en plus.
-- **Contenu de chaque slide de parcours** : un emplacement pour la capture d'écran ou la vidéo du parcours (D42), et les phrases fortes qui s'y rapportent.
-- **Écarté** : une slide par parcours sans transition, et une seule slide « Démo » avec les phrases fortes en notes du présentateur.
+- **Décision** : dans `pitch.pptx`, juste après la slide « Présentation de la solution », une slide de transition « Démo » ouvre la démonstration. Elle est suivie d'une slide par séquence filmée, avec les phrases fortes qui s'y rapportent.
+- **Séquence de l'ordonnance (parcours 6, 1 et 2)** : une seule slide, car c'est une seule vidéo. Elle commence quand Fatou envoie la photo de l'ordonnance et finit quand elle reçoit 💡 « La Pharmacie Baobab a peut-être une solution ». Une capture d'écran du téléphone de Baobab l'accompagne, pour montrer la demande d'équivalent côté pharmacie.
+- **Ensuite** : une slide pour le vocal en wolof (parcours 7) et une pour le côté pharmacie (parcours 3).
+- **Écarté** : une slide par parcours, avec ou sans transition ; une seule slide « Démo » avec les phrases fortes en notes du présentateur ; la séquence de l'ordonnance découpée en deux ou trois slides.
 
 ## Options en suspens
 
